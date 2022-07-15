@@ -1,0 +1,105 @@
+washer_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.zb_washer_watts
+    - platform: state
+      entity_id: binary_sensor.zb_washer_door
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.washer_status
+          state: Done
+        - platform: state
+          entity_id: binary_sensor.zb_washer_door
+          state: "on"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Idle
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: ">=2"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Running
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: "<2"
+        - platform: state
+          entity_id: input_select.washer_status
+          state: Running
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Done
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: "<2"
+        - platform: state
+          entity_id: input_select.washer_status
+          state: [Running, Done]
+          negate: true
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Idle
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: "<1"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: "Off"
+
+
+washer_is_done_announement:
+  module: automation
+  class: Automation
+  cancel_job_when_no_match: true
+  variables:
+    message: "Washer has finished and is ready to be emptied."
+  triggers:
+    - platform: state
+      entity_id: input_select.washer_status
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.washer_status
+          state: Done
+      actions:
+        - platform: repeat
+          repeat: 1800
+          delay: 300
+          actions:
+            - platform: announcement
+              tts_message: "{{ message }}"
+              notify_message: "👖{{ message }}"
+              notifier: ios
+
+
+laundry_room_auto_dehumifier:
+  module: humidity_controlled_fan
+  class: HumidityControlledFan
+  fan_entity_id: humidifier.midea_laundry_room_dehumidifier
+  trigger_entity_id: input_select.washer_status
+  trigger_from_states:
+    - Idle
+    - Off
+    - Done
+  trigger_to_states:
+    - Running
+  humidity_entity_id: sensor.zb_laundry_room_humidity
+  target_humidity_diff_in_percent: 5
+  max_fan_runtime_in_min: 60
+  turn_on_fan_delay_in_min: 20

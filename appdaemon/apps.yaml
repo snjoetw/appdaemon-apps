@@ -1,0 +1,6173 @@
+###############################################################################
+# M E R G E D  F R O M  var_common.yaml
+###############################################################################
+
+var_door_locks: &var_door_locks
+  - lock.zwave_front_door
+  - lock.zwave_entry_door
+#  - lock.mqtt_garage_door_lock
+
+
+var_door_sensors: &var_door_sensors
+  - binary_sensor.group_front_door
+  - binary_sensor.group_garage_entry_door
+  - binary_sensor.mqtt_basement_entry_door
+  - binary_sensor.group_kitchen_french_door
+  - binary_sensor.m2_side_garage_door
+
+
+var_outside_door_sensors: &var_outside_door_sensors
+  - binary_sensor.m2_side_garage_door
+  - binary_sensor.zb_shed_door
+
+
+var_downstairs_window_sensors: &var_downstairs_window_sensors
+  - binary_sensor.mqtt_laundry_room_window
+  - binary_sensor.mqtt_kitchen_window
+  - binary_sensor.mqtt_family_room_window
+  - binary_sensor.mqtt_living_room_window
+  - binary_sensor.mqtt_office_window
+
+
+var_upstairs_window_sensors: &var_upstairs_window_sensors
+  - binary_sensor.mqtt_annes_room_window
+  - binary_sensor.mqtt_dressing_room_window
+  - binary_sensor.mqtt_lynns_room_window
+  - binary_sensor.mqtt_master_bathroom_window
+  - binary_sensor.mqtt_master_bedroom_window
+
+
+var_basement_window_sensors: &var_basement_window_sensors
+  - binary_sensor.mqtt_workout_room_window
+
+
+var_window_sensors: &var_window_sensors
+  - *var_downstairs_window_sensors
+  - *var_upstairs_window_sensors
+  - *var_basement_window_sensors
+
+
+var_downstairs_motion_sensors: &var_downstairs_motion_sensors
+  - binary_sensor.group_family_room_motion
+  - binary_sensor.group_hallway_motion
+  - binary_sensor.group_kitchen_motion
+  - binary_sensor.group_office_motion
+  - binary_sensor.group_living_room_motion
+  - binary_sensor.group_laundry_room_motion
+  - binary_sensor.zb_stairway_motion
+  - binary_sensor.zb_washroom_motion
+
+
+var_upstairs_motion_sensors: &var_upstairs_motion_sensors
+  - binary_sensor.group_upstairs_hallway_motion
+  - binary_sensor.group_master_bedroom_motion
+  - binary_sensor.zb_lynn_s_room_motion
+  - binary_sensor.zb_master_bathroom_motion
+  - binary_sensor.zb_master_bedroom_closet_motion
+  - binary_sensor.m2_upstair_hallway_motion
+
+
+var_basement_motion_sensors: &var_basement_motion_sensors
+  - binary_sensor.group_basement_kitchen_motion
+  - binary_sensor.group_workout_room_motion
+  - binary_sensor.m2_basement_stairway_motion
+
+
+var_motion_sensors: &var_motion_sensors
+  - *var_downstairs_motion_sensors
+  - *var_upstairs_motion_sensors
+  - *var_basement_motion_sensors
+
+var_downstairs_lights: &var_downstairs_lights
+  - light.hue_office_light
+  - light.hue_dining_room_lamp
+  - light.hue_kitchen_lightstrip
+  - light.hue_kitchen_pantry_light
+  - light.hue_family_room_light
+  - switch.sh_office_light
+  - light.hue_hallway_light
+  - light.zwave_lobby_light
+  - light.zwave_stairway_light
+  - switch.sh_living_room_light
+  - switch.sh_kitchen_light
+  - switch.sh_kitchen_counter_light
+  - switch.sh_washroom_light
+
+var_upstairs_lights: &var_upstairs_lights
+  - light.hue_lynn_s_room_ceiling_light
+  - light.hue_lynn_s_room_lightstrip
+  - light.hue_lynn_s_room_lamp
+  - light.hue_upstairs_hallway_light
+  - light.hue_kids_bathroom_light
+  - light.hue_master_bedroom_light
+  - light.yeelight_kids_bathroom_lightstrip
+  - light.tp_master_bathroom_light
+  - switch.sh_master_bedroom_wall_light
+  - switch.tp_master_bathroom_ceiling_light
+  - switch.tp_master_bedroom_walkin_closet_light
+
+var_basement_lights: &var_basement_lights
+  - light.hue_basement_stairway_light
+  - light.zwave_workout_room_light
+  - switch.zwave_basement_living_room_light
+
+var_outside_front_yard_lights: &var_outside_front_yard_lights
+  - light.zwave_front_door_light
+  - light.zwave_front_yard_light
+  - switch.sh_front_yard_floodlight
+
+var_outside_back_yard_lights: &var_outside_back_yard_lights
+  - light.hue_backyard_spot_light
+  - light.hue_backyard_wall_light
+  - switch.zwave_backyard_pergola_light
+  - switch.zwave_backyard_wall_light
+  - switch.tp_backyard_landscaping_light
+
+var_outside_rear_driveway_lights: &var_outside_rear_driveway_lights
+  - switch.sh_rear_driveway_floodlight
+
+var_outside_lights: &var_outside_lights
+  - *var_outside_front_yard_lights
+  - *var_outside_back_yard_lights
+  - *var_outside_rear_driveway_lights
+
+var_garage_doors: &var_garage_doors
+  - cover.hkc_front_garage_door
+  - cover.hkc_back_garage_door
+
+var_outside_motion_sensors: &var_outside_motion_sensors
+  - binary_sensor.group_outside_front_yard_motion
+  - binary_sensor.group_outside_front_door_motion
+  - binary_sensor.group_outside_side_alley_motion
+  - binary_sensor.sh_backyard_motion
+  - binary_sensor.sh_rear_driveway_motion
+  - binary_sensor.zwave_backyard_motion
+
+var_vacuums: &var_vacuums
+  - vacuum.basement_vacuum
+  - vacuum.xiaomi_downstairs_vacuum
+  - vacuum.upstairs_vacuum
+
+var_water_leak: &var_water_leak
+  - binary_sensor.zb_kitchen_sink_water_leak
+  - binary_sensor.zb_washer_water_leak
+  - binary_sensor.zb_fridge_water_leak
+  - binary_sensor.zb_shower_room_water_leak
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  basement.yaml
+###############################################################################
+
+basement_stairway_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.m2_basement_stairway_motion
+    - binary_sensor.m2_basement_stairway_door
+  turn_off_delay: 30
+  dim_light_before_turn_off: false
+  scenes:
+    - scene_name: Default
+      lights:
+        - entity_id: light.hue_basement_stairway_light
+          brightness: 255
+
+basement_hallway_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.ble_basement_hallway_motion
+  turn_off_delay: 300
+  dim_light_before_turn_off: false
+  scenes:
+    - scene_name: Default
+      lights:
+        - switch.hkc_basement_hallway_light
+
+basement_living_room_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.group_basement_kitchen_motion
+    - binary_sensor.mqtt_basement_entry_door
+  enabler_entity_id: input_boolean.is_motion_enabled_basement_living_room
+  turn_off_delay: 1800
+  dim_light_before_turn_off: false
+  scenes:
+    - scene_name: Default
+      lights:
+        - switch.zwave_basement_living_room_light
+
+basement_living_room_wall_switch:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: homekit_controller_device_event
+  constraints:
+    - platform: or
+      constraints:
+        - platform: triggered_event
+          event_data:
+            device_id: 0b862f2c78635229a505da6a3ef9cbbe
+        - platform: triggered_event
+          event_data:
+            device_id: 09d1a8ae5467faf855757e5226929c4c
+            type: button1
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: switch.zwave_basement_living_room_light
+          state: 'on'
+      actions:
+        - platform: turn_off
+          dim_light_before_turn_off: false
+          entity_ids:
+            - input_boolean.is_motion_enabled_basement_living_room
+            - switch.zwave_basement_living_room_light
+        - platform: delay
+          delay: 30
+          actions:
+            - platform: turn_on
+              entity_ids: input_boolean.is_motion_enabled_basement_living_room
+
+    - constraints:
+        - platform: state
+          entity_id: switch.zwave_basement_living_room_light
+          state: 'off'
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - switch.zwave_basement_living_room_light
+            - input_boolean.is_motion_enabled_basement_living_room
+
+
+basement_workout_room_wall_switch:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: homekit_controller_device_event
+  constraints:
+    - platform: triggered_event
+      event_data:
+        device_id: 09d1a8ae5467faf855757e5226929c4c
+        type: button2
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id:
+            - light.zwave_workout_room_light
+            - switch.hkc_basement_hallway_light
+          state: 'on'
+      actions:
+        - platform: turn_off
+          dim_light_before_turn_off: false
+          entity_ids:
+            - light.zwave_workout_room_light
+            - switch.hkc_basement_hallway_light
+
+    - constraints:
+        - platform: state
+          entity_id:
+            - light.zwave_workout_room_light
+            - switch.hkc_basement_hallway_light
+          state: 'off'
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - light.zwave_workout_room_light
+            - switch.hkc_basement_hallway_light
+
+
+basement_workout_room_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id: binary_sensor.group_workout_room_motion
+  turn_off_delay: 900
+  scenes:
+    - scene_name: Default
+      lights:
+        - entity_id: light.zwave_workout_room_light
+          brightness: 255
+
+basement_workout_room_pathway_light:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: light.zwave_workout_room_light
+      from: "on"
+      to: "off"
+  handlers:
+    - constraints:
+      actions:
+        - platform: trigger_pathway_light
+          app_name: basement_stairway_lighting
+
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  climate.yaml
+###############################################################################
+
+###############################################################################
+# C L I M A T E
+###############################################################################
+climate_comfort_mode:
+  module: climate_comfort_mode_monitor
+  class: ClimateComfortModeMonitor
+  temperature_entity_id: sensor.template_upstairs_average_temperature
+  climate_comfort_level_entity_id: input_select.climate_comfort_mode
+  target_temp_high: input_number.main_floor_target_temp_high
+  target_temp_low: input_number.main_floor_target_temp_low
+
+
+last_climate_hvac_action:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.template_climate_main_floor_hvac_action
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: heating
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.last_climate_hvac_action
+          option: heating
+    - constraints:
+        - platform: triggered_state
+          to: cooling
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.last_climate_hvac_action
+          option: cooling
+
+
+climate_auto_fan_min_on_time:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.climate_comfort_mode
+        - climate.main_floor
+        - input_select.air_quality_level
+    - platform: state
+      entity_id:
+        - climate.main_floor
+      attribute: preset_mode
+  handlers:
+    - constraints:
+        - platform: attribute
+          entity_id: climate.main_floor
+          attribute: preset_mode
+          value: "Away"
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 0
+    - constraints:
+        - platform: state
+          entity_id: input_select.air_quality_level
+          state: [POOR, VERY_POOR]
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 60
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: Hot
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 30
+    - constraints:
+        - platform: state
+          entity_id: input_select.air_quality_level
+          state: [FAIR]
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 15
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: Warm
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 10
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: Comfort
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 0
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: [Cool, Cold]
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 0
+
+
+auto_fan_vent:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.template_climate_main_floor_fan
+      to: "on"
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_vent_enabled
+      state: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_cover_position
+          entity_id:
+            - cover.zb_kitchen_vent
+            - cover.zb_lynn_s_room_vent
+            - cover.zb_office_vent
+            - cover.zb_master_bedroom_vent_1
+            - cover.zb_master_bedroom_vent_2
+          position: 100
+
+
+auto_thermostat_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.presence_mode
+    - platform: time
+      minutes: 15
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.presence_mode
+          state: No One is Home
+      actions:
+        - platform: service
+          service: climate/set_preset_mode
+          data:
+            entity_id: climate.main_floor
+            preset_mode: away
+    - constraints:
+        - platform: state
+          entity_id: input_select.presence_mode
+          state: No One is Home
+          negate: true
+        - platform: attribute
+          entity_id: climate.main_floor
+          attribute: preset_mode
+          value: "Away"
+      actions:
+        - platform: service
+          service: ecobee/resume_program
+          data:
+            entity_id: climate.main_floor
+            resume_all: true
+
+
+#auto_cooling_fan:
+#  module: cooling_fan_runner
+#  class: CoolingFanRunner
+#  climate_entity_id: climate.main_floor
+#  presence_mode_entity_id: input_select.presence_mode
+#  monitors:
+#    - temperature_entity_id: sensor.office_temperature
+#      fan_entity_id: fan.dyson_office
+#      fan_on_temperature_offset: -0.1
+#      fan_off_temperature_offset: -0.3
+#      ignore_presence_mode: true
+#      enabler_entity_id: input_boolean.is_auto_fan_enabled_office
+#    - temperature_entity_id: sensor.template_lynn_s_room_temperature
+#      fan_entity_id: fan.dyson_lynns_room
+#      fan_on_temperature_offset: 0
+#      fan_off_temperature_offset: -0.3
+#      enabler_entity_id: input_boolean.is_auto_fan_enabled_lynns_room
+#    - temperature_entity_id: sensor.template_master_bedroom_temperature
+#      fan_entity_id: fan.dyson_master_bedroom
+#      fan_on_temperature_offset: 0
+#      fan_off_temperature_offset: -0.3
+#      enabler_entity_id: input_boolean.is_auto_fan_enabled_master_bedroom
+
+
+
+auto_climate_vent_monitor:
+  module: auto_climate_vent_monitor
+  class: AutoClimateVentMonitor
+  enabler_entity_id: input_boolean.is_auto_vent_enabled
+  climate_entity_id: climate.main_floor
+  target_temp_high: input_number.main_floor_target_temp_high
+  target_temp_low: input_number.main_floor_target_temp_low
+  last_hvac_action_entity_id: input_select.last_climate_hvac_action
+  hvac_action_entity_id: sensor.template_climate_main_floor_hvac_action
+  zones:
+    - temperature_entity_id: sensor.template_master_bedroom_temperature
+      vent_entity_ids:
+        - cover.zb_master_bedroom_vent_1
+        - cover.zb_master_bedroom_vent_2
+      cooling_temp_offset_high: 0.1
+      cooling_temp_offset_low: -0.5
+      heating_temp_offset_high: 0
+      heating_temp_offset_low: -0.8
+      fully_open_entity_id: input_boolean.is_climate_master_bedroom_only_mode
+
+    - temperature_entity_id: sensor.template_kitchen_temperature
+      vent_entity_ids:
+        - cover.zb_kitchen_vent
+      cooling_temp_offset_high: 0.2
+      cooling_temp_offset_low: -0.5
+      heating_temp_offset_high: 0
+      heating_temp_offset_low: -0.8
+
+    - temperature_entity_id: sensor.template_lynn_s_room_temperature
+      vent_entity_ids:
+        - cover.zb_lynn_s_room_vent
+      cooling_temp_offset_high: 0
+      cooling_temp_offset_low:  -0.5
+      heating_temp_offset_high: 0.5
+      heating_temp_offset_low: 0
+      min_open_percent: 0.2
+
+    - temperature_entity_id: sensor.template_office_temperature
+      vent_entity_ids:
+        - cover.zb_office_vent
+      cooling_temp_offset_high: -0.5
+      cooling_temp_offset_low:  -1
+      heating_temp_offset_high: 0
+      heating_temp_offset_low: -0.8
+
+#    - temperature_entity_id: sensor.anne_s_room_temperature
+#      vent_entity_ids:
+#        - cover.zb_anne_s_room_vent
+#      cooling_temp_offset_high: 1
+#      cooling_temp_offset_low:  0.5
+#      heating_temp_offset_high: 0
+#      heating_temp_offset_low: -0.8
+
+
+air_quality_monitor:
+  module: air_quality_monitor
+  class: AirQualityMonitor
+  overall_air_quality_level_entity_id: input_select.air_quality_level
+  rooms:
+    - air_quality_level_entity_id: input_select.air_quality_level_kitchen
+      name: Kitchen
+      sensors:
+        - sensor_entity_id: sensor.airthings_kitchen_co2
+          name: CO2
+          thresholds:
+            - level: VERY_POOR
+              value: 1000
+            - level: FAIR
+              value: 900
+        - sensor_entity_id: sensor.airthings_kitchen_radon
+          name: Radon
+          thresholds:
+            - level: VERY_POOR
+              value: 150
+            - level: FAIR
+              value: 100
+        - sensor_entity_id: sensor.airthings_kitchen_voc
+          name: VOC
+          thresholds:
+            - level: VERY_POOR
+              value: 2000
+            - level: FAIR
+              value: 250
+    - air_quality_level_entity_id: input_select.air_quality_level_master_bedroom
+      name: Master Bedroom
+      sensors:
+        - sensor_entity_id: sensor.airthings_master_bedroom_voc
+          name: VOC
+          thresholds:
+            - level: VERY_POOR
+              value: 2000
+            - level: FAIR
+              value: 250
+        - sensor_entity_id: sensor.dyson_master_bedroom_pm_10
+          name: PM 10
+          thresholds:
+            - level: VERY_POOR
+              value: 100
+            - level: POOR
+              value: 75
+            - level: FAIR
+              value: 50
+        - sensor_entity_id: sensor.dyson_master_bedroom_pm_2_5
+          name: PM 2.5
+          thresholds:
+            - level: VERY_POOR
+              value: 70
+            - level: POOR
+              value: 54
+            - level: FAIR
+              value: 36
+        - sensor_entity_id: sensor.dyson_master_bedroom_nitrogen_dioxide
+          name: NO2
+          thresholds:
+            - level: VERY_POOR
+              value: 9
+            - level: POOR
+              value: 7
+            - level: FAIR
+              value: 4
+    - air_quality_level_entity_id: input_select.air_quality_level_lynn_s_room
+      name: Lynn's Room
+      sensors:
+        - sensor_entity_id: sensor.airthings_lynns_room_voc
+          name: VOC
+          thresholds:
+            - level: VERY_POOR
+              value: 2000
+            - level: FAIR
+              value: 250
+        - sensor_entity_id: sensor.dyson_lynns_room_pm_10
+          name: PM 10
+          thresholds:
+            - level: VERY_POOR
+              value: 100
+            - level: POOR
+              value: 75
+            - level: FAIR
+              value: 50
+        - sensor_entity_id: sensor.dyson_lynns_room_pm_2_5
+          name: PM 2.5
+          thresholds:
+            - level: VERY_POOR
+              value: 70
+            - level: POOR
+              value: 54
+            - level: FAIR
+              value: 36
+        - sensor_entity_id: sensor.dyson_lynns_room_nitrogen_dioxide
+          name: NO2
+          thresholds:
+            - level: VERY_POOR
+              value: 9
+            - level: POOR
+              value: 7
+            - level: FAIR
+              value: 4
+
+
+fan_auto_night_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - fan.dyson_lynns_room
+        - fan.dyson_master_bedroom
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "on"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - switch.dyson_lynns_room_night_mode
+            - switch.dyson_master_bedroom_night_mode
+
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "off"
+      actions:
+        - platform: turn_off
+          entity_ids:
+            - switch.dyson_lynns_room_night_mode
+            - switch.dyson_master_bedroom_night_mode
+
+
+var_fan_auto_mode_actions: &var_fan_auto_mode_actions
+  - platform: service
+    service: fan/turn_on
+    data:
+      entity_id: fan.dyson_master_bedroom
+      preset_mode: Auto
+  - platform: service
+    service: fan/turn_on
+    data:
+      entity_id: fan.dyson_lynns_room
+      preset_mode: Auto
+    constraints:
+      - platform: state
+        entity_id: input_select.last_climate_hvac_action
+        state: cooling
+
+
+fan_auto_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.sleeping_time
+        - input_select.climate_comfort_mode
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.sleeping_time
+          to: "on"
+      actions: *var_fan_auto_mode_actions
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.climate_comfort_mode
+          to: Comfort
+        - platform: time
+          start_time: "03:00:00"
+          end_time: "08:00:00"
+      actions: *var_fan_auto_mode_actions
+
+
+climate_preset_mode_overrider:
+  module: climate_preset_mode_overrider
+  class: ClimatePresetModeOverrider
+  climate_entity_id: climate.main_floor
+  override_enabler_entity_id: input_boolean.is_climate_master_bedroom_only_mode
+  overrides:
+    Sleep: Sleep M
+    Midnight: Midnight M
+    E Morning: E Morning M
+    Morning: Morning M
+
+
+auto_climate_master_bedroom_only_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id:
+        - input_select.occupancy_master_bedroom
+        - input_select.occupancy_lynn_s_room
+        - binary_sensor.sleeping_time
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "on"
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "off"
+        - platform: state
+          entity_id: input_select.occupancy_master_bedroom
+          state: OCCUPIED
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+          negate: true
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "on"
+        - platform: state
+          entity_id: input_select.occupancy_master_bedroom
+          state: OCCUPIED
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "off"
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "on"
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+
+auto_climate_master_bedroom_only_mode_notification:
+  module: automation
+  class: Automation
+  variables:
+    enabled_message: "Master bedroom only mode enabled."
+    disabled_message: "Master bedroom only mode disabled."
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id: input_boolean.is_climate_master_bedroom_only_mode
+  constraints:
+    - platform: triggered_state
+      from: ["on", "off"]
+      to: ["on", "off"]
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "on"
+      actions:
+        - platform: notify
+          message: "🛏️ {{ enabled_message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            thread_id: Climate
+            interruption_level: time-sensitive
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "off"
+      actions:
+        - platform: notify
+          message: "🛏️ {{ disabled_message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            thread_id: Climate
+            interruption_level: time-sensitive
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  common.yaml
+###############################################################################
+
+###############################################################################
+# C O M M O N
+###############################################################################
+
+notifier:
+  module: notifier
+  class: Notifier
+  ios:
+    recipients:
+      joe: mobile_app_joes_iphone
+      yuyu: mobile_app_yuyus_iphone
+    notification_templates:
+      tesla_monitor:
+        thread_id: Tesla Monitor
+        url: /lovelace/view_garage
+      alarm_armed:
+        thread_id: Alarm Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_TRIGGER
+            title: Trigger Alarm
+      alarm_armed_away_motion_triggered:
+        thread_id: Alarm Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_ARM_AWAY
+            title: Ignore
+          - action: ALARM_TRIGGER
+            title: Trigger Alarm
+      alarm_disarmed:
+        thread_id: Alarm Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: ALARM_ARM_HOME
+            title: Arm Home
+          - action: ALARM_ARM_AWAY
+            title: Arm Away
+      front_doorbell:
+        thread_id: Front Doorbell
+        url: /lovelace/view_alarm
+        interruption_level: time-sensitive
+        sound_name: Sherwood_Forest.caf
+        actions:
+          - action: FRONT_DOORBELL_EMERGENCY
+            title: Emergency
+            destructive: true
+            icon: "sfsymbols:bell"
+          - action: FRONT_DOORBELL_SAY_YOU_CAN_LEAVE_IT
+            title: Say "You can leave it by the door. Thank you!"
+          - action: FRONT_DOORBELL_SAY_WE_WILL_BE_RIGHT_THERE
+            title: Say "We'll be right there."
+          - action: FRONT_DOORBELL_SAY_NO_ONE_CAN_COME_TO_THE_DOOR
+            title: Say "No one can come to the door."
+          - action: FRONT_DOORBELL_SAY_THANK_YOU
+            title: Say "Thank you!"
+      garage_opened_closed:
+        thread_id: Garage Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: CLOSE_FRONT_GARAGE_DOOR
+            title: Close Front Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_front_garage_door
+                state: open
+          - action: CLOSE_BACK_GARAGE_DOOR
+            title: Close Back Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_back_garage_door
+                state: open
+          - action: OPEN_FRONT_GARAGE_DOOR
+            title: Open Front Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_front_garage_door
+                state: closed
+          - action: OPEN_BACK_GARAGE_DOOR
+            title: Open Back Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_back_garage_door
+                state: closed
+  facebook_messenger:
+    recipients: !secret facebook_recipients_by_name
+    access_token: !secret facebook_meesenger_page_access_token
+
+announcer:
+  module: announcer
+  class: Announcer
+  tts_platform: amazon_polly
+  tts_base_filepath: /config/tts/
+  library_base_filepath: /config/www/library/
+  library_base_url_path: /local/library/
+  sound_path:
+    chime: 'sound/chime.mp3'
+    empty: 'sound/empty.mp3'
+    alarm_siren: 'sound/alarm_siren.mp3'
+    door_beep: 'sound/door_beep.mp3'
+    window_beep: 'sound/window_beep.mp3'
+    garage_beep: 'sound/garage_beep.mp3'
+    doorbell: 'sound/doorbell.mp3'
+    dog_barking: 'sound/dog_barking.mp3'
+
+  sleeping_time_entity_id: binary_sensor.sleeping_time
+  api_base_url: !secret homeassistant_internal_url
+  api_token: !secret appdaemon_hass_api_token
+  enabler_entity_id: input_boolean.is_announcer_enabled
+  default_speak_speed: 90%
+  default_volume:
+    sleeping: 0.40
+    regular: 0.6
+    critical: 0.75
+  players:
+    - type: google
+      player_entity_id: media_player.gh_shower_room
+      motion_entity_id: binary_sensor.zb_shower_room_motion
+      keep_alive: true
+      volume:
+        sleeping: 0
+        regular: 0.4
+        critical: 0.6
+      enabled:
+        - platform: state
+          entity_id: light.zb_shower_room_light
+          state: "on"
+    - type: google
+      player_entity_id: media_player.gh_laundry_room
+      motion_entity_id: binary_sensor.group_laundry_room_motion
+      keep_alive: true
+      volume:
+        sleeping: 0.25
+        regular: 0.6
+        critical: 0.75
+    - type: google
+      player_entity_id: media_player.gh_family_room
+      motion_entity_id:
+        - binary_sensor.group_family_room_motion
+        - binary_sensor.group_kitchen_motion
+      keep_alive: true
+    - type: sonos
+      player_entity_id: media_player.dining_room
+      motion_entity_id: binary_sensor.group_living_room_motion
+      volume:
+        sleeping: 0.25
+        regular: 0.45
+        critical: 0.7
+    - type: sonos
+      player_entity_id: media_player.office
+      motion_entity_id: binary_sensor.group_office_motion
+      volume:
+        sleeping: 0.25
+        regular: 0.45
+        critical: 0.7
+    - type: sonos
+      player_entity_id: media_player.basement_living_room
+      motion_entity_id: binary_sensor.group_workout_room_motion
+      volume:
+        sleeping: 0.25
+        regular: 0.45
+        critical: 0.7
+    - type: sonos
+      player_entity_id: media_player.master_bathroom
+      motion_entity_id: binary_sensor.zb_master_bathroom_motion
+      volume:
+        sleeping: 0.35
+        regular: 0.45
+        critical: 0.45
+      enabled:
+        - platform: state
+          entity_id: input_boolean.is_showering_master_bedroom
+          state: "on"
+    - type: default
+      player_entity_id: media_player.udmp_front_doorbell_speaker
+      targeted_only: true
+      volume:
+        sleeping: 0.9
+        regular: 0.9
+        critical: 0.9
+    - type: default
+      player_entity_id: media_player.udmp_backyard_speaker
+      targeted_only: true
+      volume:
+        sleeping: 0.9
+        regular: 0.9
+        critical: 0.9
+
+
+motion_announcer:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.group_family_room_motion
+        - binary_sensor.group_kitchen_motion
+        - binary_sensor.group_office_motion
+        - binary_sensor.group_living_room_motion
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: motion_announcer
+          message_entity_id: input_text.motion_announcement_message
+          message_from_entity_id: input_select.motion_announcement_from
+        - platform: set_value
+          entity_id: input_text.motion_announcement_message
+          value: ""
+
+
+is_vacation_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: time
+      minutes: 60
+  handlers:
+    - constraints:
+        - platform: time
+          start_time_entity_id: input_datetime.vacation_start_date
+          end_time_entity_id: input_datetime.vacation_end_date
+      actions:
+        - platform: turn_on
+          entity_ids:
+            input_boolean.is_vacation_mode:
+              force_on: false
+    - constraints:
+      actions:
+        - platform: turn_off
+          entity_ids:
+            input_boolean.is_vacation_mode:
+              force_off: false
+
+
+
+vacation_mode_notifier:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_vacation_mode
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          from: "off"
+          to: "on"
+      actions:
+        - platform: notify
+          message: "Hello! We're going away and will be back on {{ format_date(state('input_datetime.vacation_end_date')) }}. Please look after our house for us :)"
+          recipient: all
+          notifier: facebook_messenger
+    - constraints:
+        - platform: triggered_state
+          from: "on"
+          to: "off"
+      actions:
+        - platform: notify
+          message: "Hello! We're back, thanks for taking care of our house!"
+          recipient: all
+          notifier: facebook_messenger
+
+
+# https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder
+# Lougheed Town Centre Station: ChIJO_DzbDt4hlQRLTw8oxdhBck
+# Braid Station: ChIJT9NHFQV4hlQReDxG330uMO8
+# Saperton Station: ChIJSYSNfP93hlQRwkTQf2d81D4
+# Columbia Station: ChIJCUsMnHLYhVQRSLPLTPRCdS4
+# Stadium-Chinatown Station: ChIJDRJikHtxhlQRC36gLHt3sJ8
+commute_time_monitor:
+  module: commute_time_monitor
+  class: CommuteTimeMonitor
+  google_travel_time_api_key: !secret google_travel_time_api_key
+  presence_status_entity_id: input_select.joe_status
+  notify_entity_id:
+    - mobile_app_joes_iphone
+  start_time: '08:00:00'
+  end_time: '10:00:00'
+  routes:
+    - name: Driving
+      origin: !secret map_location_home
+      destinations:
+        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+          travel_mode: driving
+
+    - name: Lougheed Mall Station
+      origin: !secret map_location_home
+      destinations:
+        - destination: place_id:ChIJT9NHFQV4hlQReDxG330uMO8
+          travel_mode: driving
+        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+          travel_mode: transit
+        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+          travel_mode: walking
+
+    - name: Braid Station
+      origin: !secret map_location_home
+      destinations:
+        - destination: place_id:ChIJO_DzbDt4hlQRLTw8oxdhBck
+          travel_mode: driving
+        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+          travel_mode: transit
+        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+          travel_mode: walking
+#
+#    - name: Saperton
+#      origin: !secret map_location_home
+#      destinations:
+#        - destination: place_id:ChIJSYSNfP93hlQRwkTQf2d81D4
+#          travel_mode: driving
+#        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+#          travel_mode: transit
+#        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+#          travel_mode: walking
+#
+#    - name: Columbia
+#      origin: !secret map_location_home
+#      destinations:
+#        - destination: place_id:ChIJCUsMnHLYhVQRSLPLTPRCdS4
+#          travel_mode: driving
+#        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+#          travel_mode: transit
+#        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+#          travel_mode: walking
+
+
+briefer:
+  module: briefer
+  class: Briefer
+  motion_entity_id:
+    - binary_sensor.group_office_motion
+    - binary_sensor.group_family_room_motion
+    - binary_sensor.group_kitchen_motion
+  on_demand_entity_id: input_boolean.is_on_demand_briefing_enabled
+  briefing_state_entity_id: input_select.briefing_state
+  briefing_state_period:
+    - state: EARLY_MORNING
+      start_time: '4:15:00'
+      end_time: '8:00:00'
+    - state: MORNING
+      start_time: '8:30:00'
+      end_time: '9:00:00'
+    - state: NOON
+      start_time: '12:00:00'
+      end_time: '15:00:00'
+    - state: EVENING
+      start_time: '17:00:00'
+      end_time: '20:00:00'
+  providers:
+    - provider: greet
+    - provider: weather_forecast
+
+    - provider: calendar
+      api_base_url: !secret homeassistant_internal_url
+      api_token: !secret appdaemon_hass_api_token
+      calendar_entity_id: calendar.google_home
+      waste_collection_calendar_entity_id: calendar.google_my_waste
+
+    - provider: stock
+      api_key: !secret finhub_api_key
+      workday_entity_id: binary_sensor.workday_sensor
+      stock_symbols:
+        - AAPL
+        - TSLA
+        - SQ
+
+    - provider: low_battery_device
+
+
+reminder:
+  module: reminder
+  class: Reminder
+  presence_mode_entity_id: input_select.presence_mode
+  motion_entity_id:
+    - binary_sensor.group_family_room_motion
+    - binary_sensor.group_kitchen_motion
+    - binary_sensor.group_office_motion
+    - binary_sensor.group_living_room_motion
+  providers:
+    - provider: device_battery
+      trigger_method: motion
+      interval: 180
+
+    - provider: vent_issue
+      trigger_method: motion
+      interval: 180
+
+    - provider: travel_time
+      interval: 5
+      calendar_api_base_url: !secret homeassistant_internal_url
+      calendar_api_token: !secret appdaemon_hass_api_token
+      calendar_entity_id: calendar.google_home
+      map_api_key: !secret google_travel_time_api_key
+      map_home_location: !secret map_location_home
+      buffer_time: 15
+      notify:
+        notifier: ios
+        ios:
+          thread_id: Travel Time
+
+    - provider: school_time
+      interval: 5
+      start_time: '08:25:00'
+      end_time: '08:55:00'
+      school_time: '08:50:00'
+      school_day_entity_id: input_boolean.is_school_day
+
+    - provider: drink_water
+      enabled: false
+      interval: 90
+      trigger_method: motion
+      start_time: '09:00:00'
+      end_time: '17:00:00'
+
+    - provider: bad_air_quality
+      interval: 60
+      trigger_method: motion
+      bad_air_quality_mode_entity_id: input_boolean.is_bad_air_quality_mode
+
+    - provider: exceeds_threshold
+      interval: 30
+      trigger_method: motion
+      thresholds:
+        - threshold: 1000
+          message: 'CO2 level is high in {}'
+        - threshold: 2000
+          message: 'CO2 level is really high in {}'
+      notify_settings:
+        message: '{{reminder_text}}'
+        recipient: all
+        notifier: ios
+        ios:
+          thread_id: Air Quality Monitor
+      settings:
+        - entity_id: sensor.airthings_kitchen_co2
+          name: Kitchen
+
+    - provider: climate_away_mode
+      interval: 60
+      trigger_method: motion
+      climate_entity_id: climate.main_floor
+
+    - provider: abnormal_room_temperature
+      interval: 60
+      threshold: 0.1
+      rooms:
+        - name: Kitchen
+          temperature_entity_id: sensor.template_kitchen_temperature
+        - name: Lynn's Room
+          temperature_entity_id: sensor.template_lynn_s_room_temperature
+        - name: Master Bedroom
+          temperature_entity_id: sensor.template_master_bedroom_temperature
+        - name: Office
+          temperature_entity_id: sensor.template_office_temperature
+        - name: Ann's Room
+          temperature_entity_id: sensor.anne_s_room_temperature
+
+    - provider: left_on
+      interval: 10
+      message: '{} is still open.'
+      message_plural: '{} are still open.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          thread_id: Security Monitor
+          url: /lovelace/view_alarm
+      thresholds:
+        - threshold: 3600
+          entity_id:
+            - *var_downstairs_window_sensors
+            - *var_basement_window_sensors
+        - threshold: 1800
+          entity_id:
+            - *var_door_sensors
+            - *var_outside_door_sensors
+
+    - provider: left_on
+      interval: 10
+      message: '{} is still open.'
+      message_plural: '{} are still open.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          thread_id: Security Monitor
+          url: /lovelace/view_alarm
+          notification_template_name: garage_opened_closed
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - *var_garage_doors
+
+    - provider: left_on
+      interval: 10
+      message: '{} has been left unlocked for too long.'
+      message_plural: '{} have been left unlocked for too long.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          thread_id: Security Monitor
+          url: /lovelace/view_alarm
+          notification_template_name: garage_opened_closed
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - *var_door_locks
+
+    - provider: left_on
+      interval: 10
+      message: "{} has been left open for too long."
+      message_plural: '{} have been left open for too long.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          notification_template_name: tesla_monitor
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - binary_sensor.mqtt_tesla_model_x_trunk
+            - binary_sensor.mqtt_tesla_model_x_frunk
+            - binary_sensor.mqtt_tesla_model_x_doors
+            - binary_sensor.mqtt_tesla_model_x_windows
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_x_user_present
+              state: "off"
+        - threshold: 600
+          entity_id:
+            - binary_sensor.mqtt_tesla_model_y_trunk
+            - binary_sensor.mqtt_tesla_model_y_frunk
+            - binary_sensor.mqtt_tesla_model_y_doors
+            - binary_sensor.mqtt_tesla_model_y_windows
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_y_user_present
+              state: "off"
+
+
+    - provider: left_on
+      interval: 10
+      message: '{} has been left unlocked for too long.'
+      message_plural: '{} have been left unlocked for too long.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          notification_template_name: tesla_monitor
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - lock.mqtt_tesla_model_x_door
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_x_user_present
+              state: "off"
+            - platform: state
+              entity_id: sensor.template_presence_tesla_model_x
+              negate: true
+              state: home
+        - threshold: 600
+          entity_id:
+            - lock.mqtt_tesla_model_y_door
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_y_user_present
+              state: "off"
+            - platform: state
+              entity_id: sensor.template_presence_tesla_model_y
+              negate: true
+              state: home
+
+
+mobile_app_notification_handler:
+  module: mobile_app_notification_handler
+  class: MobileAppNotificationHandler
+  notification_entity_id:
+    - sensor.fire_hd_2017_last_notification
+    - sensor.vizio_tablet_last_notification
+
+
+school_day_monitor:
+  module: school_day_monitor
+  class: SchoolDayMonitor
+  calendar_api_base_url: !secret homeassistant_internal_url
+  calendar_api_token: !secret appdaemon_hass_api_token
+  calendar_entity_id: calendar.google_elementary_school
+  workday_entity_id: binary_sensor.workday_sensor
+  school_day_entity_id: input_boolean.is_school_day
+
+
+food_delivery_notifier:
+  module: automation
+  class: Automation
+  variables:
+    order_delivered_message: "{{ trigger_info.data.data.service_name }} order is delivered at front door."
+    order_almost_delivered_message: "{{ trigger_info.data.data.service_name }} delivery person is almost at front door."
+    order_on_the_move_message: "{{ trigger_info.data.data.service_name }} order is on the move."
+    preparing_order_message: "Restaurant is preparing your {{ trigger_info.data.data.service_name }} order."
+    order_ready_for_pickup_message: "{{ trigger_info.data.data.service_name }} order is ready, time to pick it up."
+  triggers:
+    - platform: event
+      event_type: ad.food_delivery_event
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_delivered
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_delivered_message }}"
+          notify_message: "🍴 {{ order_delivered_message }}"
+          notifier: ios
+          notify_camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_almost_delivered
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_almost_delivered_message }}"
+          notify_message: "🚗 {{ order_almost_delivered_message }}"
+          notifier: ios
+          notify_camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_on_the_move
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_on_the_move_message }}"
+          notify_message: "🚗 {{ order_on_the_move_message }}"
+          notifier: ios
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: preparing_order
+      actions:
+        - platform: announcement
+          tts_message: "{{ preparing_order_message }}"
+          notify_message: "🥡 {{ preparing_order_message }}"
+          notifier: ios
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_ready_for_pickup
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_ready_for_pickup_message }}"
+          notify_message: "🚙 {{ order_ready_for_pickup_message }}"
+          notifier: ios
+
+
+timer_monitor:
+  module: timer_monitor
+  class: TimerMonitor
+  timer_entity_id:
+    - sensor.family_room_speaker_timers
+    - sensor.kitchen_display_timers
+    - sensor.laundry_room_speaker_timers
+    - sensor.lynns_room_speaker_timers
+
+
+medicine_intake_tracker_joe:
+  module: medicine_intake_tracker
+  class: MedicineIntakeTracker
+  state_entity_id: input_select.medicine_intake_state_joe
+  count_entity_id: input_number.medicine_intake_count_joe
+  max_pill_count: 4
+  pill_box_entity_id: binary_sensor.m2_pill_box
+
+
+sequence_going_downstairs_detector:
+  log_level: DEBUG
+  module: sequence_monitor
+  class: SequenceMonitor
+  min_match: 4
+  sequence_entity_id: input_boolean.sequence_going_downstairs_detected
+  sequence:
+    - entity_id:
+        - binary_sensor.m2_master_bedroom_door
+        - binary_sensor.m2_lynn_s_room_door
+    - entity_id: binary_sensor.group_upstairs_hallway_motion
+    - entity_id: binary_sensor.zb_stairway_motion
+    - entity_id: binary_sensor.zb_hallway_motion_2
+    - entity_id: binary_sensor.zb_hallway_motion
+    - entity_id:
+        - binary_sensor.group_kitchen_motion
+        - binary_sensor.group_office_motion
+        - binary_sensor.group_living_room_motion
+        - binary_sensor.group_family_room_motion
+        - binary_sensor.zb_washroom_motion
+
+
+sequence_going_upstairs_detector:
+  log_level: DEBUG
+  module: sequence_monitor
+  class: SequenceMonitor
+  min_match: 3
+  sequence_entity_id: input_boolean.sequence_going_upstairs_detected
+  sequence:
+    - entity_id: binary_sensor.group_hallway_motion
+    - entity_id: binary_sensor.zb_stairway_motion
+    - entity_id: binary_sensor.group_upstairs_hallway_motion
+    - entity_id:
+        - binary_sensor.m2_master_bedroom_door
+        - binary_sensor.m2_lynn_s_room_door
+        - binary_sensor.zb_shower_room_motion
+
+
+fire_hd_10_last_notification:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      attribute: all
+      entity_id:
+        - sensor.fire_hd_2017_last_notification
+        - sensor.fire_hd_10_2019_last_notification
+  handlers:
+    - constraints:
+      actions:
+        - platform: debug
+
+
+occupancy_monitor:
+  module: occupancy_monitor
+  class: OccupancyMonitor
+  rooms:
+    - name: Lynn's Room
+      occupancy_entity_id: input_select.occupancy_lynn_s_room
+      entry_entity_id: binary_sensor.m2_lynn_s_room_door
+      movement_entity_id:
+        - binary_sensor.zb_lynn_s_room_motion
+        - binary_sensor.zb_lynn_s_room_under_bed_motion
+      media_player_entity_id: media_player.lynns_room
+
+    - name: Master Bedroom Room
+      occupancy_entity_id: input_select.occupancy_master_bedroom
+      entry_entity_id: binary_sensor.m2_master_bedroom_door
+      movement_entity_id:
+        - binary_sensor.group_master_bedroom_motion
+      media_player_entity_id: media_player.master_bedroom
+
+
+zha_event_debugger:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: zha_event
+  constraints:
+  handlers:
+    - constraints:
+      actions:
+        - platform: debug
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  common_lighting.yaml
+###############################################################################
+
+light_runtime_monitor:
+  module: light_runtime_monitor
+  class: LightRuntimeMonitor
+  check_frequency: 600
+  thresholds:
+    - entity_id: light.hue_kitchen_pantry_light
+      threshold_in_minute: 15
+    - entity_id: light.hue_basement_stairway_light
+      threshold_in_minute: 15
+    - entity_id: light.hue_lynn_s_room_lightstrip
+      threshold_in_minute: 60
+    - entity_id: light.hue_lynn_s_room_ceiling_light
+      threshold_in_minute: 60
+    - entity_id: light.hue_kids_bathroom_light
+      threshold_in_minute: 15
+    - entity_id: light.yeelight_kids_bathroom_lightstrip
+      threshold_in_minute: 15
+    - entity_id: switch.tp_master_bedroom_walkin_closet_light
+      threshold_in_minute: 60
+    - entity_id: light.zwave_stairway_light
+      threshold_in_minute: 5
+    - entity_id: input_boolean.is_showering_shower_room
+      threshold_in_minute: 60
+
+
+darkness_monitor:
+  module: darkness_monitor
+  class: DarknessMonitor
+  zones:
+    - darkness_entity_id: input_select.darkness_level_downstairs_front
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_front_door_motion_illuminance
+          skip_when_on_entity_ids:
+            - light.zwave_front_door_light
+          darkness_threshold: 3000
+
+    - darkness_entity_id: input_select.darkness_level_downstairs_back
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_side_alley_illuminance
+          darkness_threshold: 3000
+
+    - darkness_entity_id: input_select.darkness_level_downstairs_kitchen
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_kitchen_motion_illuminance
+          darkness_threshold: 75
+          skip_when_on_entity_ids:
+            - switch.sh_kitchen_light
+            - switch.sh_kitchen_counter_light
+        - light_sensor_entity_id: sensor.zwave_backyard_luminance
+          darkness_threshold: 3000
+
+    - darkness_entity_id: input_select.darkness_level_upstairs_master_bathroom
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_master_bathroom_motion_illuminance
+          darkness_threshold: 150
+          skip_when_on_entity_ids:
+            - light.tp_master_bathroom_light
+            - switch.tp_master_bathroom_ceiling_light
+        - light_sensor_entity_id: sensor.zwave_backyard_luminance
+          darkness_threshold: 700
+
+
+lighting_mode_monitor:
+  module: lighting_mode_monitor
+  class: LightingModeMonitor
+  check_frequency: 15
+  sleeping_time_entity_id: binary_sensor.sleeping_time
+  midnight_time_entity_id: binary_sensor.midnight_time
+  lighting_modes:
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_backyard
+      participate_sleeping_time: false
+      participate_sunset_time: false
+      thresholds:
+        8: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_front_yard
+      participate_sleeping_time: false
+      participate_sunset_time: false
+      thresholds:
+        10: Not Dark
+        0: Dark
+    # Family Room
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_family_room
+      participate_sleeping_time: false
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_hallway
+      participate_sleeping_time: true
+      thresholds:
+        900: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_kitchen
+      participate_sleeping_time: true
+      thresholds:
+        750: Not Dark
+        0: Dark
+    # Living Room
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_living_room
+      participate_sleeping_time: false
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_stairway
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_upstairs
+      participate_midnight_time: true
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_master_bathroom
+      participate_midnight_time: true
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_master_bedroom
+      thresholds:
+        750: Not Dark
+        0: Dark
+
+
+vacant_light_simulator:
+  module: vacant_light_simulator
+  class: VacantLightSimulator
+  presence_mode_entity_id: input_select.presence_mode
+  simulators:
+    - light_entity_id: light.hue_hallway_light
+      light_mode_entity_id: input_select.lighting_mode_hallway
+      light_mode_states: [Dark, Sleeping]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 3600
+      turn_off_min_delay: 60
+      turn_off_max_delay: 120
+    - light_entity_id: light.hue_upstairs_hallway_light
+      light_mode_entity_id: input_select.lighting_mode_upstairs
+      light_mode_states: [Dark]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 3600
+      turn_off_min_delay: 60
+      turn_off_max_delay: 120
+    - light_entity_id: light.zwave_stairway_light
+      light_mode_entity_id: input_select.lighting_mode_stairway
+      light_mode_states: [Dark, Sleeping]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 3600
+      turn_off_min_delay: 60
+      turn_off_max_delay: 120
+    - light_entity_id: switch.sh_kitchen_light
+      light_mode_entity_id: input_select.lighting_mode_kitchen
+      light_mode_states: [Dark, Sleeping]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 3600
+      turn_on_max_delay: 5400
+      turn_off_min_delay: 1800
+      turn_off_max_delay: 2700
+    - light_entity_id: switch.sh_office_light
+      light_mode_entity_id: input_select.lighting_mode_office
+      light_mode_states: [Dark]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 2700
+      turn_off_min_delay: 3600
+      turn_off_max_delay: 7200
+    - light_entity_id: light.hue_family_room_light
+      light_mode_entity_id: input_select.lighting_mode_family_room
+      light_mode_states: [Dark]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 2700
+      turn_off_min_delay: 3600
+      turn_off_max_delay: 7200
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  dad_s_home.yaml
+###############################################################################
+
+dad_s_home_water_leak_detected:
+  module: automation
+  class: Automation
+  cancel_job_when_no_match: true
+  variables:
+    message: >
+      Water detected around dad's {{ friendly_name(trigger_info.data.entity_id) | replace('Dad\'s Home ', '') | replace(' Water Leak', '') | lower }}.
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.rh_dad_furnance_water_leak
+        - binary_sensor.rh_dad_kitchen_sink_water_leak
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: repeat
+          repeat: 300
+          delay: 5
+          actions:
+            - platform: announcement
+              tts_message: "{{ message }}"
+            - platform: notify
+              message: "💧 {{ message }}"
+              recipient: all
+              notifier: ios
+              ios:
+                critical: true
+                thread_id: Water Leak Monitor
+
+
+dad_s_home_temperature_monitor:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.rh_dad_dad_s_home_dining_room_temperature
+        - sensor.rh_dad_master_bedroom_temperature
+  constraints:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      state: "on"
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: '>= 27'
+      actions:
+        - platform: notify
+          recipient: all
+          notifier: ios
+          message: >
+            🥵 Temperature is too high ({{ state(trigger_info.data.entity_id) }}°C) in dad's {{ friendly_name(trigger_info.data.entity_id) | replace('Dad\'s Home ', '') | replace(' Temperature', '') | lower }}.
+    - constraints:
+        - platform: triggered_state
+          to: '<= 17'
+      actions:
+        - platform: notify
+          recipient: all
+          notifier: ios
+          message: >
+            😰 Temperature is too low ({{ state(trigger_info.data.entity_id) }}°C) in dad's {{ friendly_name(trigger_info.data.entity_id) | replace('Dad\'s Home ', '') | replace(' Temperature', '') | lower }}."
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  downstairs.yaml
+###############################################################################
+
+###############################################################################
+# S T A I R W A Y
+###############################################################################
+stairway_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_stairway
+  scene_entity_id: input_select.lighting_mode_stairway
+  motion_entity_id: binary_sensor.zb_stairway_motion
+  turn_off_delay: 30
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.zwave_stairway_light
+          brightness: 80
+#    - scene_name: Sleeping
+#      lights:
+#        - entity_id: light.zwave_stairway_light
+#          brightness: 20
+
+###############################################################################
+# W A S H R O O M
+###############################################################################
+washroom_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id: binary_sensor.zb_washroom_motion
+  turn_off_delay: 600
+  scenes:
+    - scene_name: Default
+      lights:
+        - switch.sh_washroom_light
+
+
+###############################################################################
+# H A L L W A Y
+###############################################################################
+hallway_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.group_hallway_motion
+    - binary_sensor.group_laundry_room_motion
+  enabler_entity_id: input_boolean.is_motion_enabled_hallway
+  scene_entity_id: input_select.lighting_mode_hallway
+  turn_off_delay: 20
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.hue_hallway_light
+          brightness: 255
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.hue_hallway_light
+          brightness: 150
+
+hallway_pathway_light:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: group.downstairs_lights_without_hallway_light
+      from: "on"
+      to: "off"
+  handlers:
+    - constraints:
+      actions:
+        - platform: trigger_pathway_light
+          app_name: hallway_lighting
+
+
+###############################################################################
+# L I V I N G  R O O M
+###############################################################################
+#living_room_lighting:
+#  module: image_processing_motion_lighting
+#  class: ImageProcessingMotionLighting
+#  enabler_entity_id: input_boolean.is_motion_enabled_living_room
+#  scene_entity_id: input_select.lighting_mode_living_room
+#  motion_entity_id:
+#    - binary_sensor.group_living_room_motion
+#  turn_off_delay: 300
+#  image_processing_settings:
+#    enabler_entity_id: input_boolean.is_image_processing_enabled_living_room
+#    person_detected_entity_id: binary_sensor.template_living_room_person
+#  scenes:
+#    - scene_name: Dark
+#      lights:
+#        - switch.sh_living_room_light
+
+
+xmas_lighting:
+  module: automation
+  class: Automation
+  variables:
+    turn_on_time: "sunset + 00:30:00"
+    turn_off_time: "23:00:00"
+  triggers:
+    - platform: time
+      time: "{{ turn_on_time }}"
+    - platform: time
+      time: "{{ turn_off_time }}"
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_light_enabled_dining_room
+      state: "on"
+  handlers:
+    - actions:
+        - platform: turn_off
+          entity_ids: switch.tp_outdoor_plug_1
+          constraints:
+            - platform: triggered_time
+              time: '{{turn_off_time}}'
+        - platform: turn_on
+          entity_ids: switch.tp_outdoor_plug_1
+          constraints:
+            - platform: triggered_time
+              time: '{{turn_on_time}}'
+
+living_room_shade_auto_open:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunrise
+      offset: 600
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_shade_enabled_living_room
+      state: 'on'
+    - platform: state
+      entity_id: input_select.presence_mode
+      state: No One is Home
+      negate: true
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.zb_living_room_shade
+          position: 25
+
+living_room_shade_auto_close:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunset
+      offset: -1800
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.mqtt_living_room_window
+          state: "off"
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.zb_living_room_shade
+          position: 0
+
+
+###############################################################################
+# D I N I N G  R O O M
+###############################################################################
+dining_room_lighting:
+  module: timer_motion_lighting
+  class: TimerMotionLighting
+  enabler_entity_id: input_boolean.is_auto_light_enabled_dining_room
+  timer:
+    turn_on_start_time: 'sunset'
+    turn_on_end_time: '23:00:00'
+  scenes:
+    - scene_name: Default
+      lights:
+        - entity_id: light.hue_dining_room_lamp
+          brightness: 255
+          rgb_color: [255, 203, 114]
+          force_on: false
+          force_off: false
+
+dining_room_meeting_dnd:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.zoom_joe
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: override_announcer_player_volume
+          entity_id: media_player.gh_dining_room
+          volume: 0
+    - constraints:
+        - platform: triggered_state
+          to: "off"
+      actions:
+        - platform: override_announcer_player_volume
+          entity_id: media_player.gh_dining_room
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  downstairs_family_room.yaml
+###############################################################################
+
+#family_room_lighting:
+#  module: motion_lighting
+#  class: MotionLighting
+#  enabler_entity_id: input_boolean.is_motion_enabled_family_room
+#  lighting_mode_entity_id: input_select.lighting_mode_family_room
+#  motion_entity_id: binary_sensor.group_family_room_motion
+#  turn_off_delay: 600
+#  lighting_modes:
+#    Dark:
+#      - light.hue_family_room_light
+#    Sleeping:
+#      - light.hue_family_room_light
+#  image_processing:
+#    person_entity_id: binary_sensor.template_family_room_person
+#    enabler_entity_id: input_boolean.is_image_processing_enabled_family_room
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  downstairs_kitchen.yaml
+###############################################################################
+
+kitchen_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_kitchen
+  scene_entity_id: input_select.lighting_mode_kitchen
+  motion_entity_id: binary_sensor.group_kitchen_motion
+  turn_off_delay: 300
+  turn_off_light_entity_ids:
+    - light.hue_kitchen_lightstrip
+    - switch.sh_kitchen_counter_light
+  turn_on_constraints:
+    - platform: state
+      entity_id: switch.sh_kitchen_light
+      state: "off"
+  scenes:
+    - scene_name: Sleeping
+      lights:
+        - switch.sh_kitchen_light
+      constraints:
+        - platform: time
+          start_time: "05:00:00"
+          end_time: "08:30:00"
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.hue_kitchen_lightstrip
+          brightness: 254
+          rgb_color: [255, 203, 114]
+        - entity_id: switch.sh_kitchen_counter_light
+    - scene_name: Dark
+      turn_off_delay: 60
+      constraints:
+        - platform: triggered_state
+          to: "off"
+      lights:
+        - switch.sh_kitchen_light
+
+kitchen_lighting_2:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: switch.sh_kitchen_light
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: switch.sh_kitchen_counter_light
+          state: "on"
+      actions:
+        - platform: turn_off
+          dim_light_before_turn_off: false
+          entity_ids:
+            - switch.sh_kitchen_counter_light
+            - light.hue_kitchen_lightstrip
+
+
+kitchen_lightstrip_lighting:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: switch.sh_kitchen_counter_light
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.hue_kitchen_lightstrip
+              brightness: 254
+              rgb_color: [255, 203, 114]
+    - constraints:
+        - platform: triggered_state
+          to: "off"
+      actions:
+        - platform: turn_off
+          dim_light_before_turn_off: false
+          entity_ids: light.hue_kitchen_lightstrip
+
+
+kitchen_pantry_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.zb_kitchen_pantry_door
+  turn_off_delay: 0
+  dim_light_before_turn_off: false
+  scenes:
+    - scene_name: Default
+      lights:
+        - entity_id: light.hue_kitchen_pantry_light
+          brightness: 255
+
+
+kitchen_french_door_shade_auto_open:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunrise
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_shade_enabled_kitchen
+      state: 'on'
+    - platform: state
+      entity_id: input_select.presence_mode
+      state: No One is Home
+      negate: true
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.zb_kitchen_shade
+          position: 100
+
+
+kitchen_french_door_shade_auto_close:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunset
+      offset: 600
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.group_kitchen_french_door
+          state: "off"
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.zb_kitchen_shade
+          position: 0
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  downstairs_laundry_room.yaml
+###############################################################################
+
+washer_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.zb_washer_watts
+    - platform: state
+      entity_id: binary_sensor.zb_washer_door
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.washer_status
+          state: Done
+        - platform: state
+          entity_id: binary_sensor.zb_washer_door
+          state: "on"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Idle
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: ">=2"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Running
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: "<2"
+        - platform: state
+          entity_id: input_select.washer_status
+          state: Running
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Done
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: "<2"
+        - platform: state
+          entity_id: input_select.washer_status
+          state: [Running, Done]
+          negate: true
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: Idle
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_washer_watts
+          state: "<1"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.washer_status
+          option: "Off"
+
+
+washer_is_done_announement:
+  module: automation
+  class: Automation
+  cancel_job_when_no_match: true
+  variables:
+    message: "Washer has finished and is ready to be emptied."
+  triggers:
+    - platform: state
+      entity_id: input_select.washer_status
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.washer_status
+          state: Done
+      actions:
+        - platform: repeat
+          repeat: 1800
+          delay: 300
+          actions:
+            - platform: announcement
+              tts_message: "{{ message }}"
+              notify_message: "👖{{ message }}"
+              notifier: ios
+
+
+laundry_room_auto_dehumifier:
+  module: humidity_controlled_fan
+  class: HumidityControlledFan
+  fan_entity_id: humidifier.midea_laundry_room_dehumidifier
+  trigger_entity_id: input_select.washer_status
+  trigger_from_states:
+    - Idle
+    - Off
+    - Done
+  trigger_to_states:
+    - Running
+  humidity_entity_id: sensor.zb_laundry_room_humidity
+  target_humidity_diff_in_percent: 5
+  max_fan_runtime_in_min: 60
+  turn_on_fan_delay_in_min: 20
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  downstairs_office.yaml
+###############################################################################
+
+office_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_office
+  scene_entity_id: input_select.lighting_mode_office
+  motion_entity_id:
+    - binary_sensor.group_office_motion
+  turn_off_delay: 300
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: switch.sh_office_light
+        - entity_id: light.hue_office_light
+          brightness: 254
+
+
+office_monitor_random_lighting:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: time
+      seconds: 1800
+  constraints:
+    - platform: state
+      entity_id:
+        - light.hue_office_light
+        - switch.sh_office_light
+      state: 'on'
+      match_all: true
+  handlers:
+    - constraints:
+      actions:
+        - platform: hue_activate_scene
+          entity_id: light.hue_office_light
+          scene_name:
+            - Arctic aurora
+            - Tropical twilight
+            - Spring blossom
+            - Savanna sunset
+
+
+office_cube:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: zha_event
+  constraints:
+    - platform: triggered_event
+      event_data:
+        device_ieee: '00:15:8d:00:01:0a:e6:64'
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            command: 'flip'
+      actions:
+        - platform: turn_off
+          dim_light_before_turn_off: false
+          entity_ids:
+            - switch.sh_office_light
+            - light.hue_office_light
+          constraints:
+            - platform: state
+              entity_id: switch.sh_office_light
+              state: 'on'
+
+        - platform: turn_on
+          entity_ids:
+            - entity_id: switch.sh_office_light
+            - entity_id: light.hue_office_light
+              brightness: 254
+          constraints:
+            - platform: state
+              entity_id: switch.sh_office_light
+              state: 'off'
+
+
+office_meeting_dnd:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.zb_office_door
+      immediate: true
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "off"
+      actions:
+        - platform: override_announcer_player_volume
+          entity_id: media_player.office
+          volume: 0.0
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: override_announcer_player_volume
+          entity_id: media_player.office
+
+
+office_shade_auto_open:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunrise
+      offset: 3600
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_shade_enabled_office
+      state: 'on'
+    - platform: state
+      entity_id: input_select.presence_mode
+      state: No One is Home
+      negate: true
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.tuya_office_shade
+          position: 50
+
+
+office_shade_auto_close:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunset
+      offset: -3600
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.mqtt_office_window
+          state: "off"
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.tuya_office_shade
+          position: 0
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  garage.yaml
+###############################################################################
+
+garage_light_left_on:
+  module: automation
+  class: Automation
+  variables:
+    message: "There is light detected in the garage."
+  triggers:
+    - platform: state
+      entity_id: sensor.zwave_garage_illuminance
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: sensor.zwave_garage_illuminance
+          state: ">=5"
+        - platform: time
+          start_time: sunset + 00:30:00
+          end_time: sunrise
+        - platform: has_scheduled_job
+          negate: true
+      actions:
+        - platform: repeat
+          repeat: 2700
+          delay: 900
+          actions:
+            - platform: announcement
+              tts_message: "{{ message }}"
+              notify_message: "💡 {{ message }}"
+              notifier: ios
+    - constraints:
+        - platform: state
+          entity_id: sensor.zwave_garage_illuminance
+          state: "<5"
+        - platform: has_scheduled_job
+      actions:
+        - platform: cancel_job
+
+
+garage_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.group_garage_entry_door
+    - binary_sensor.m2_side_garage_door
+    - binary_sensor.zwave_garage_motion
+    - cover.hkc_front_garage_door
+    - cover.hkc_back_garage_door
+  turn_off_delay: 600
+  scenes:
+    - scene_name: Default
+      lights:
+        - switch.sh_garage_light
+
+
+garage_bench_light:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - lock.zwave_entry_door
+        - binary_sensor.m2_side_garage_door
+        - binary_sensor.zwave_garage_motion
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to:
+            - unlocked
+            - "on"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.wled_garage_bench_light
+              brightness: 254
+              rgb_color: [255, 255, 255]
+
+    - constraints:
+        - platform: triggered_state
+          to:
+            - locked
+            - "off"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.wled_garage_bench_light
+              brightness: 254
+              rgb_color: [255, 255, 255]
+        - platform: delay
+          delay: 300
+          actions:
+            - platform: turn_off
+              entity_ids:
+                - light.wled_garage_bench_light
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  ios_action.yaml
+###############################################################################
+
+###############################################################################
+# I O S   A C T I O N
+###############################################################################
+
+home_status_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+  handlers:
+    - constraints:
+        - platform: triggered_action
+          action_name: home_status
+      actions:
+        - platform: notify
+          recipient: joe
+          notifier: ios
+          message: |
+            🐘: {{ state('sensor.template_lynn_s_room_temperature') }}°C
+            🛏️: {{ state('sensor.template_master_bedroom_temperature') }}°C
+            🔪: {{ state('sensor.template_kitchen_temperature') }}°C
+            Last motion in {{ state('input_text.last_home_movement') | lower | replace(' motion', '') | replace(' 2', '') }} {{ relative_time(state_attr('input_text.last_home_movement', 'last_updated')) }}
+          ios:
+            critical: true
+            volume: 0.0
+
+
+shower_time_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+  handlers:
+    - constraints:
+        - platform: triggered_action
+          action_name: shower_time
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_scene_shower_time
+
+
+unlock_entry_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_entry_door
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: lock.zwave_entry_door
+          state: locked
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "🔓 Entry door unlocked by tag"
+
+unlock_front_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_front_door
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: lock.zwave_front_door
+          state: locked
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_front_door
+          notifier: ios
+          notify_message: "🔓 Front door unlocked by tag"
+
+disarm_alarm_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: disarm_alarm
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state: disarmed
+          negate: true
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_disarm
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+            code: !secret alarm_control_panel_code
+
+turn_off_master_bedroom_led:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: disable_kasa_led
+  handlers:
+    - constraints:
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_kasa_led_enabled_master_bedroom
+        - platform: delay
+          # 12 hrs
+          delay: 43200
+          actions:
+            - platform: turn_on
+              entity_ids: input_boolean.is_kasa_led_enabled_master_bedroom
+
+toggle_climate_master_bedroom_only_mode_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: toggle_climate_master_bedroom_only_mode
+  handlers:
+    - constraints:
+      actions:
+        - platform: toggle
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+
+record_timestamp_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: record_timestamp
+  handlers:
+    - constraints:
+      actions:
+        - platform: debug
+
+
+unlock_tesla_model_x_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_tesla_model_x_door
+  handlers:
+    - constraints:
+      actions:
+        - platform: unlock
+          entity_id: lock.template_tesla_model_x_door
+          notifier: ios
+          notify_message: "🔓 Tesla Model X door unlocked"
+
+
+unlock_tesla_model_y_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_tesla_model_y_door
+  handlers:
+    - constraints:
+      actions:
+        - platform: unlock
+          entity_id: lock.template_tesla_model_y_door
+          notifier: ios
+          notify_message: "🔓 Tesla Model Y door unlocked"
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  monitoring.yaml
+###############################################################################
+
+water_leak_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: *var_water_leak
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_water_leak
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+    - constraints:
+        - platform: state
+          entity_id: *var_water_leak
+          state: [ "off", "unavailable", "unknown" ]
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_water_leak
+          state: "off"
+
+
+water_leak_annoucement:
+  module: automation
+  class: Automation
+  cancel_job_when_no_match: true
+  variables:
+    message: "Water detected around {{ friendly_name(trigger_info.data.entity_id) | replace(' Water Leak', '') | lower }}."
+  triggers:
+    - platform: state
+      entity_id: *var_water_leak
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: repeat
+          repeat: 300
+          delay: 5
+          actions:
+            - platform: announcement
+              tts_message: "{{ message }}"
+              notify_message: "💧 {{ message }}"
+              notifier: ios
+              ios:
+                critical: true
+                thread_id: Water Leak Monitor
+                volume: 0.5
+
+
+mailbox_monitor:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.zb_mailbox_door
+      from: "off"
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.group_front_door
+          state: "off"
+      actions:
+        - platform: camera_snapshot
+          entity_id: camera.udmp_front_doorbell_medium_insecure
+          filename: mailbox_notifier.jpg
+        - platform: turn_on
+          entity_ids:
+            input_boolean.is_mail_delivered:
+              force_on: false
+
+
+mail_delivered_notifier:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_boolean.is_mail_delivered
+        - binary_sensor.group_front_door
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_boolean.is_mail_delivered
+          from: "off"
+          to: "on"
+      actions:
+        - platform: delay
+          delay: 120
+          actions:
+            - platform: announcement
+              tts_message: "Mail was just delivered"
+            - platform: alarm_notifier
+              message: "Mail was just delivered"
+              image_filename: mailbox_notifier.jpg
+              ios:
+                thread_id: Mail Monitor
+    - constraints:
+        - platform: triggered_state
+          # either input_boolean.is_mail_delivered or binary_sensor.group_front_door
+          # went from on to off should cancel the notifier
+          from: "on"
+          to: "off"
+      actions:
+        - platform: cancel_job
+          cancel_all: true
+        - platform: turn_off
+          entity_ids: input_boolean.is_mail_delivered
+
+
+package_delivered_notifier:
+  module: automation
+  class: Automation
+  variables:
+    message: "A package was just delivered"
+  triggers:
+    - platform: event
+      event_type: ad.nest_event
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: package_left
+            home: Joe
+      actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_message: "📦 {{ message }}"
+          notifier: ios
+          notify_camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+          ios:
+            thread_id: Mail Monitor
+
+
+package_retrieved_notifier:
+  module: automation
+  class: Automation
+  variables:
+    message: "Someone just retrieved your package."
+  triggers:
+    - platform: event
+      event_type: ad.nest_event
+  constraints:
+    - platform: triggered_event
+      event_data:
+        event_type: package_picked_up
+        home: Joe
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.group_front_door
+          state: ["on", "off"]
+          last_changed_seconds: ">=60"
+      actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_message: "📦 {{ message }}"
+          notifier: ios
+          notify_camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+          ios:
+            thread_id: Mail Monitor
+
+
+noise_level_monitor:
+  module: noise_level_monitor
+  class: NoiseLevelMonitor
+  monitor_settings:
+    - noise_entity_id: binary_sensor.ffmpeg_noise_master_bedroom
+      light_data:
+        xy_color:
+          - 0.191
+          - 0.229
+    - noise_entity_id: binary_sensor.ffmpeg_noise_lynn_s_room
+      light_data:
+        xy_color:
+          - 0.326
+          - 0.175
+  sleeping_time_entity_id: binary_sensor.sleeping_time
+  light_settings:
+    - light_entity_id: light.hue_office_light
+    - light_entity_id: switch.sh_kitchen_light
+      delegate_light_entity_id: light.hue_kitchen_lightstrip
+
+
+device_monitor:
+  log_level: WARNING
+  module: device_monitor
+  class: DeviceMonitor
+  checkers:
+    - type: vent
+      pattern: '^sensor\.zb_.*_vent_temperature.*'
+    - type: battery_level
+      pattern:
+        - pattern: 'sensor\.4_in_1_sensor_battery_level'
+          ignore: true
+        - pattern: '^sensor\.zwave.+lock_battery'
+          battery_level_threshold: 40
+        - pattern: '^sensor\.mqtt_tesla_model_(x|y)_battery_level'
+          battery_level_threshold: 35
+        - pattern: '^sensor\.(yuyu_s_iphone|joes_iphone|joes_ipad_pro)_battery_level'
+          battery_level_threshold: 35
+        - pattern: '^(zha|sensor|binary_sensor)\..+'
+          battery_level_threshold: 20
+    - type: unavailable_entity
+      pattern:
+        - pattern: (^sensor|^binary_sensor|^light|^switch)\.zb.+
+    - type: ge_bulb
+      pattern: '^light\.ge_.*'
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  notification.yaml
+###############################################################################
+
+###############################################################################
+# N O T I F I C A T I O N   A U T O M A T I O N
+###############################################################################
+music_notification_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_PIANO_CHILL
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.45
+          source: 'Piano Chill'
+          shuffle: true
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_CHILL_MIX
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.3
+          source: 'Chill Mix'
+          shuffle: true
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_K_POP_CHILL
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.3
+          source: 'K-Pop Chill'
+          shuffle: true
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_K_POP_ESSENTIALS
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.3
+          source: 'K-Pop Essentials'
+          shuffle: true
+
+
+alarm_notification_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_DISARM
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_disarm
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+            code: !secret alarm_control_panel_code
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_ARM_AWAY
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_away
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_ARM_HOME
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_home
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_TRIGGER
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_trigger
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+            code: !secret alarm_control_panel_code
+
+
+garage_notification_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: CLOSE_FRONT_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/close_cover
+          data:
+            entity_id: cover.hkc_front_garage_door
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: OPEN_FRONT_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/open_cover
+          data:
+            entity_id: cover.hkc_front_garage_door
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: CLOSE_BACK_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/close_cover
+          data:
+            entity_id: cover.hkc_back_garage_door
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: OPEN_BACK_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/open_cover
+          data:
+            entity_id: cover.hkc_back_garage_door
+
+
+front_doorbell_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_YOU_CAN_LEAVE_IT
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">Hi there, you can leave the package by the door. Thank you!</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_WE_WILL_BE_RIGHT_THERE
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">We will be right there.</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_NO_ONE_CAN_COME_TO_THE_DOOR
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">No one can come to the door.</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_THANK_YOU
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">Thank you! Have a nice day!</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_EMERGENCY
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">You are being recorded.<break time=".2s" />Police have been contacted.</prosody>'
+          prelude_name: alarm_siren
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+        - platform: trigger_pathway_light
+          app_name: front_door_lighting
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: TURN_OFF_MASTER_BEDROOM_ONLY_MODE
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SET_UNOCCUPIED_LYNN_S_ROOM
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_lynn_s_room
+          option: UNOCCUPIED
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  outside.yaml
+###############################################################################
+
+var_backyard_trigger_entity_ids: &var_backyard_trigger_entity_ids
+  - binary_sensor.group_outside_side_alley_motion
+  - binary_sensor.group_outside_backyard_motion
+  - binary_sensor.m2_side_garage_door
+  - binary_sensor.group_kitchen_french_door
+  - binary_sensor.mqtt_basement_entry_door
+  - input_boolean.is_person_detected_backyard
+
+
+front_yard_lighting:
+  module: timer_motion_lighting
+  class: TimerMotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_front_yard
+  scene_entity_id: input_select.lighting_mode_front_yard
+  motion_entity_id:
+    - binary_sensor.group_outside_front_yard_motion
+    - binary_sensor.group_outside_front_door_motion
+    - binary_sensor.udmp_front_doorbell_doorbell
+  turn_off_delay: 300
+  timer:
+    turn_on_start_time: '16:00:00'
+    turn_on_end_time: '22:00:00'
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.zwave_front_yard_light
+          brightness: 255
+
+
+front_yard_floodlight:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_front_yard_floodlight
+  scene_entity_id: input_select.lighting_mode_front_yard
+  motion_entity_id:
+    - binary_sensor.group_outside_front_yard_motion
+    - binary_sensor.group_outside_front_door_motion
+    - binary_sensor.udmp_front_doorbell_doorbell
+    - cover.hkc_front_garage_door
+  turn_off_delay: 300
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: switch.sh_front_yard_floodlight
+
+
+front_door_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_front_door
+  scene_entity_id: input_select.lighting_mode_front_yard
+  motion_entity_id:
+    - binary_sensor.group_outside_front_door_motion
+    - binary_sensor.udmp_front_doorbell_doorbell
+    - binary_sensor.group_front_door
+    - lock.zwave_front_door
+  turn_off_delay: 120
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.zwave_front_door_light
+          brightness: 255
+        - entity_id: switch.sh_front_yard_floodlight
+
+
+backyard_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_backyard
+  scene_entity_id: input_select.lighting_mode_backyard
+  motion_entity_id:
+    - *var_backyard_trigger_entity_ids
+  turn_off_delay: 300
+  scenes:
+    - scene_name: Dark
+      lights:
+        - switch.sh_backyard_floodlight
+        - switch.zwave_backyard_wall_light
+        - switch.zwave_backyard_pergola_light
+        - entity_id: light.hue_backyard_wall_light
+          brightness: 255
+
+
+backyard_landscaping_lighting:
+  module: timer_motion_lighting
+  class: TimerMotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_backyard
+  scene_entity_id: input_select.lighting_mode_backyard
+  motion_entity_id:
+    - *var_backyard_trigger_entity_ids
+  turn_off_delay: 300
+  timer:
+    turn_on_start_time: '16:00:00'
+    turn_on_end_time: '22:00:00'
+  scenes:
+    - scene_name: Dark
+      lights:
+        - switch.tp_backyard_landscaping_light
+        - entity_id: light.hue_backyard_spot_light
+          brightness: 255
+
+
+rear_driveway_floodlight:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_backyard_floodlight
+  scene_entity_id: input_select.lighting_mode_front_yard
+  motion_entity_id:
+    - binary_sensor.sh_rear_driveway_motion
+    - switch.zwave_backyard_wall_light
+    - cover.hkc_back_garage_door
+  turn_off_delay: 300
+  scenes:
+    - scene_name: Dark
+      lights:
+        - switch.sh_rear_driveway_floodlight
+
+
+outside_door_opened_while_armed:
+  module: automation
+  class: Automation
+  variables:
+    message: "{{ friendly_name(trigger_info.data.entity_id) | lower }} is opened while alarm is armed."
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.zb_shed_door
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state:
+            - armed_away
+            - armed_home
+      actions:
+        - platform: announcement
+          tts_message: '{{ message }}'
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "‼️ {{ message }}"
+          ios:
+            thread_id: Security Monitor
+            notification_template_name: Outside Motion
+            critical: true
+
+
+outside_detected_motion_while_armed:
+  module: automation
+  class: Automation
+  variables:
+    message: "Motion detected in {{ friendly_name(trigger_info.data.entity_id) | replace(' Motion', '') | lower }} while alarm is armed."
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.group_outside_front_door_motion
+        - binary_sensor.group_outside_side_alley_motion
+        - binary_sensor.zb_pergola_motion
+        - binary_sensor.zwave_backyard_motion
+        - binary_sensor.sh_backyard_motion
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state:
+            - armed_away
+            - armed_home
+      actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "⚠️ {{ message }}"
+          ios:
+            thread_id: Security Monitor
+            notification_template_name: Outside Motion
+
+
+front_doorbell_rang:
+  module: automation
+  class: Automation
+  variables:
+    message: "Someone is at the front door."
+  throttle_in_seconds: 60
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.udmp_front_doorbell_doorbell
+        - input_boolean.is_person_detected_front_door
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.group_front_door
+          state: 'off'
+      actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          prelude_name: doorbell
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "⚠️ {{ message }}"
+          notifier: ios
+          ios:
+            notification_template_name: front_doorbell
+        - platform: service
+          service: camera/play_stream
+          data:
+            entity_id: camera.udmp_front_doorbell_low_insecure
+            media_player: media_player.gh_kitchen
+        - platform: delay
+          delay: 300
+          actions:
+            - platform: service
+              service: media_player/turn_off
+              data:
+                entity_id: media_player.gh_kitchen
+
+
+front_doorbell_text:
+  module: automation
+  class: Automation
+  throttle_in_seconds: 60
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.udmp_front_doorbell_doorbell
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: select_input_select_option
+          entity_id: select.udmp_front_doorbell_doorbell_text
+          option: "HELLO ( ^_^)／"
+        - platform: delay
+          delay: 5
+          actions:
+            - platform: select_input_select_option
+              entity_id: select.udmp_front_doorbell_doorbell_text
+              option: "LEAVE PACKAGE AT DOOR"
+            - platform: delay
+              delay: 5
+              actions:
+                - platform: select_input_select_option
+                  entity_id: select.udmp_front_doorbell_doorbell_text
+                  option: "HELLO ( ^_^)／"
+                - platform: delay
+                  delay: 5
+                  actions:
+                    - platform: select_input_select_option
+                      entity_id: select.udmp_front_doorbell_doorbell_text
+                      option: "LEAVE PACKAGE AT DOOR"
+
+
+
+front_door_person_detected:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.group_outside_front_door_motion
+        - sensor.udmp_front_doorbell_detected_object
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.group_outside_front_door_motion
+          state: 'on'
+        - platform: state
+          entity_id: sensor.udmp_front_doorbell_detected_object
+          state: person
+        - platform: state
+          entity_id: binary_sensor.group_front_door
+          state: 'off'
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_person_detected_front_door
+        - platform: delay
+          delay: 120
+          actions:
+            - platform: turn_off
+              entity_ids: input_boolean.is_person_detected_front_door
+
+
+backyard_detected_motion_while_armed:
+  module: automation
+  class: Automation
+  throttle_in_seconds: 1800
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.group_outside_side_alley_motion
+        - binary_sensor.group_outside_backyard_motion
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state:
+            - armed_away
+            - armed_home
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: dog_barking
+          player_entity_id: media_player.udmp_backyard_speaker
+
+
+backyard_person_detected:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.udmp_backyard_detected_object
+      to: person
+  handlers:
+    - constraints:
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_person_detected_backyard
+        - platform: delay
+          delay: 60
+          actions:
+            - platform: turn_off
+              entity_ids: input_boolean.is_person_detected_backyard
+
+
+backyard_person_detected_annoucement:
+  module: automation
+  class: Automation
+  variables:
+    message: "A person is seen in backyard while alarm is armed."
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_person_detected_backyard
+      to: "on"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state:
+            - armed_away
+            - armed_home
+      actions:
+        - platform: announcement
+          tts_message: '{{ message }}'
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "‼️ {{ message }}"
+          ios:
+            thread_id: Security Monitor
+            notification_template_name: Outside Motion
+            critical: true
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  presence.yaml
+###############################################################################
+
+###############################################################################
+# P R E S E N C E
+###############################################################################
+presence_status_automation:
+  module: presence_automation_status
+  class: PresenceStatusAutomation
+  device_entity_ids:
+    - sensor.template_presence_joe_s_iphone:
+        status_entity_id: input_select.joe_status
+        proximity_entity_id: proximity.home_joe
+    - sensor.template_presence_yuyu_s_iphone:
+        status_entity_id: input_select.yuyu_status
+        proximity_entity_id: proximity.home_yuyu
+    - sensor.template_presence_tesla_model_x:
+        status_entity_id: input_select.presence_tesla_model_x
+        proximity_entity_id: proximity.home_tesla_model_x
+    - sensor.template_presence_tesla_model_y:
+        status_entity_id: input_select.presence_tesla_model_y
+        proximity_entity_id: proximity.home_tesla_model_y
+
+presence_mode_updater:
+  module: presence_mode_updater
+  class: PresenceModeUpdater
+  person_entity_id:
+    - input_select.joe_status
+    - input_select.yuyu_status
+  presence_mode_entity_id: input_select.presence_mode
+
+
+turn_off_devices_when_nobody_is_home:
+  module: automation
+  class: Automation
+  cancel_job_when_no_match: true
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.presence_mode
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.presence_mode
+          state: No One is Home
+      actions:
+        - platform: delay
+          delay: 300
+          actions:
+            - platform: turn_off_media_player
+              entity_id:
+                - media_player.apple_tv
+                - media_player.lynns_room
+                - media_player.dining_room
+                - media_player.family_room
+                - media_player.office
+                - media_player.basement_living_room
+                - media_player.family_room_display
+                - media_player.master_bathroom
+                - media_player.master_bedroom
+            - platform: turn_off
+              entity_ids:
+                - *var_downstairs_lights
+                - *var_upstairs_lights
+        - platform: set_cover_position
+          entity_id: cover.zb_kitchen_shade
+          position: 0
+        - platform: set_cover_position
+          entity_id: cover.tuya_office_shade
+          position: 0
+        - platform: set_cover_position
+          entity_id: cover.zb_living_room_shade
+          position: 0
+
+
+zone_change_notification:
+  module: notification_automation_zone_change
+  class: ZoneChangeNotificationAutomation
+  notify_entity_ids:
+    - mobile_app_joes_iphone
+  device_entity_ids:
+    - device_tracker.ios_joe
+    - device_tracker.ios_yuyu
+
+
+someone_is_arriving_home_soon:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  throttle_in_seconds: 600
+  variables:
+    joe_arriving_message: "Joe is heading home{% if state('proximity.home_joe') | float > 0 %}, he is about {{ state('proximity.home_joe') }} km away{% endif %}."
+    yuyu_arriving_message: "YuYu is heading home{% if state('proximity.home_yuyu') | float > 0 %}, she is about {{ state('proximity.home_yuyu') }} km away{% endif %}."
+    joe_with_tesla_arriving_message: "Joe is heading home{% if state('proximity.home_tesla_model_x') | float > 0 %}, he is about {{ state('proximity.home_tesla_model_x') }} km away{% endif %}."
+    yuyu_with_tesla_arriving_message: "YuYu is heading home{% if state('proximity.home_tesla_model_x') | float > 0 %}, she is about {{ state('proximity.home_tesla_model_x') }} km away{% endif %}."
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.presence_tesla_model_x
+        - input_select.presence_tesla_model_y
+        - input_select.yuyu_status
+        - input_select.joe_status
+      to: Arriving
+  constraints:
+    - platform: state
+      entity_id: input_select.presence_mode
+      state: Someone is Home
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.presence_tesla_model_x
+      actions:
+        - platform: announcement
+          tts_message: "{{ joe_with_tesla_arriving_message }}"
+          notify_message: "🚗️ {{ joe_with_tesla_arriving_message }}"
+          notifier: ios
+          constraints:
+            - platform: state
+              entity_id: input_select.joe_status
+              state: Home
+              negate: true
+        - platform: announcement
+          tts_message: "{{ yuyu_with_tesla_arriving_message }}"
+          notify_message: "🚗️ {{ yuyu_with_tesla_arriving_message }}"
+          notifier: ios
+          constraints:
+            - platform: state
+              entity_id: input_select.yuyu_status
+              state: Home
+              negate: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.yuyu_status
+        - platform: state
+          entity_id: input_select.presence_tesla_model_x
+          state: Arriving
+          negate: true
+      actions:
+        - platform: announcement
+          tts_message: "{{ yuyu_arriving_message }}"
+          notify_message: "🚗️ {{ yuyu_arriving_message }}"
+          notifier: ios
+
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.joe_status
+        - platform: state
+          entity_id: input_select.presence_tesla_model_x
+          state: Arriving
+          negate: true
+      actions:
+        - platform: announcement
+          tts_message: "{{ joe_arriving_message }}"
+          notify_message: "🚗️ {{ joe_arriving_message }}"
+          notifier: ios
+
+
+
+heading_home_tracker:
+  log_level: DEBUG
+  module: heading_home_tracker
+  class: HeadingHomeTracker
+  presence_mode_entity_id: input_select.presence_mode
+  car_trackers:
+    - name: Tesla Model X
+      presence_status_entity_id: input_select.presence_tesla_model_x
+      proximity_entity_id: proximity.home_tesla_model_x
+    - name: Tesla Model Y
+      presence_status_entity_id: input_select.presence_tesla_model_y
+      proximity_entity_id: proximity.home_tesla_model_y
+  person_trackers:
+    - name: Joe
+      presence_status_entity_id: input_select.joe_status
+      proximity_entity_id: proximity.home_joe
+      pronoun: he
+    - name: YuYu
+      presence_status_entity_id: input_select.yuyu_status
+      proximity_entity_id: proximity.home_yuyu
+      pronoun: she
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  scene.yaml
+###############################################################################
+
+###############################################################################
+# S C E N E   A U T O M A T I O N
+###############################################################################
+shower_time_scene:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_scene_shower_time
+      from: "off"
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.45
+          source: 'Piano Chill'
+          shuffle: true
+          constraints:
+            - platform: state
+              entity_id: media_player.master_bathroom
+              state: playing
+              negate: true
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.tp_master_bathroom_light
+              brightness: 254
+              force_on: true
+            - switch.tp_master_bathroom_ceiling_light
+        - platform: delay
+          delay: 10
+          actions:
+            - platform: turn_off
+              entity_ids: input_boolean.is_scene_shower_time
+        - platform: notify
+          recipient: all
+          notifier: ios
+          message: |
+            💦 Shower time activated, remember to take the towel!
+            Do you want to change music?
+          ios:
+            thread_id: Shower Time Scene
+            actions:
+              - action: 'SONOS_PIANO_CHILL'
+                title: 'Piano Chill'
+
+              - action: 'SONOS_CHILL_MIX'
+                title: 'Chill Mix'
+
+              - action: 'SONOS_K_POP_CHILL'
+                title: 'K-Pop Chill'
+
+              - action: 'SONOS_K_POP_ESSENTIALS'
+                title: 'K-Pop Essentials'
+
+
+camping_time_scene:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_scene_camping_time
+      from: "off"
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.family_room
+          volume: 0.05
+          source: 'Unveiled'
+        - platform: turn_off
+          entity_ids:
+            - input_boolean.is_announcer_enabled
+            - input_boolean.is_auto_light_enabled_dining_room
+            - input_boolean.is_motion_enabled_hallway
+            - input_boolean.is_motion_enabled_kitchen
+            - input_boolean.is_motion_enabled_family_room
+            - input_boolean.is_auto_shade_enabled_kitchen
+        - platform: delay
+          delay: 10
+          actions:
+            - platform: turn_off
+              entity_ids: input_boolean.is_scene_camping_time
+
+
+workout_time_scene:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_scene_workout_time
+      from: "off"
+      to: "on"
+  handlers:
+    - constraints:
+      do_parallel_actions: false
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: media_player.vizio_family_room_television
+            - entity_id: light.hue_family_room_light
+              force_on: true
+        - platform: hue_activate_scene
+          entity_id: light.hue_family_room_light
+          scene_name:
+            - Concentrate
+        - platform: service
+          service: media_extractor/play_media
+          data:
+            entity_id: media_player.family_room_display
+            media_content_id: 'https://www.youtube.com/playlist?list=PLOcmS-S8otO1OSTy-c3OkxHOZVUCdnBLk'
+            media_content_type: video/youtube
+        - platform: delay
+          delay: 10
+          actions:
+            - platform: turn_off
+              entity_ids: input_boolean.is_scene_workout_time
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  security.yaml
+###############################################################################
+
+###############################################################################
+# S E C U R I T Y
+###############################################################################
+
+last_home_movement:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_motion_sensors
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_value
+          entity_id: input_text.last_home_movement
+          value: "{{ friendly_name(trigger_info.data.entity_id) }}"
+
+
+window_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: *var_window_sensors
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_window_inside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+    - constraints:
+        - platform: state
+          entity_id: *var_window_sensors
+          state: [ "off", "unavailable", "unknown" ]
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_window_inside
+          state: "off"
+
+
+door_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_outside_door_sensors
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_door_inside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+    - constraints:
+        - platform: state
+          entity_id:
+            - *var_door_sensors
+            - *var_outside_door_sensors
+          state: [ "off", "unavailable", "unknown" ]
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_door_inside
+          state: "off"
+
+
+motion_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_motion_sensors
+        - *var_outside_motion_sensors
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_downstairs_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_downstairs
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_downstairs
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_downstairs_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_upstairs_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_upstairs
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_upstairs
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_upstairs_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_basement_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_basement
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_basement
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_basement_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_outside_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_outside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_outside
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_outside_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+
+inside_motion_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_boolean.ad_motion_downstairs
+        - input_boolean.ad_motion_upstairs
+        - input_boolean.ad_motion_basement
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_inside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ state_attr(trigger_info.data.entity_id, 'last_triggered_name') }}"
+            last_triggered_entity_id: "{{ state_attr(trigger_info.data.entity_id, 'last_triggered_entity_id') }}"
+    - constraints:
+        - platform: state
+          entity_id:
+            - input_boolean.ad_motion_downstairs
+            - input_boolean.ad_motion_upstairs
+            - input_boolean.ad_motion_basement
+          state: "off"
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_inside
+          state: "off"
+
+
+###############################################################################
+# S E C U R I T Y - B E E P
+###############################################################################
+door_beep:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  variables:
+    state_icons:
+      'on': ⚠️
+      'off': ✅
+      'unavailable': ‼️
+    message: "{{ state(trigger_info.data.entity_id, state_icons) }} {{ friendly_name(trigger_info.data.entity_id) }} is {{ state(trigger_info.data.entity_id, {'on':'opened', 'off':'closed'}) }}"
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_outside_door_sensors
+        - *var_window_sensors
+      attribute: state
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_door_sensors
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: door_beep
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          volume_mode: regular
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Door Monitor
+            url: /lovelace/view_alarm
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_outside_door_sensors
+      actions:
+        - platform: announcement
+          tts_message: "<prosody rate=\"90%\">{{ friendly_name(trigger_info.data.entity_id) }} is {{ state(trigger_info.data.entity_id, {'on':'opened', 'off':'closed'}) }}</prosody>"
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          volume_mode: regular
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Door Monitor
+            url: /lovelace/view_alarm
+
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_window_sensors
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: window_beep
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Window Monitor
+            url: /lovelace/view_alarm
+
+
+garage_door_beep:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  variables:
+    state_icons:
+      'open': ⚠️
+      'opening': ⚠️
+      'closed': ✅
+      'closing': ⚠️
+      'on': ⚠️
+      'off': ✅
+    message: "{{ state(trigger_info.data.entity_id, state_icons) }} {{ friendly_name(trigger_info.data.entity_id) }} is {{ state(trigger_info.data.entity_id, {'on':'opened', 'off':'closed'}) }}"
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_garage_doors
+      attribute: state
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_garage_doors
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: garage_beep
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            notification_template_name: garage_opened_closed
+        - platform: service
+          service: mqtt/publish
+          data:
+            topic: home/alarm/notification
+            payload: garage
+
+###############################################################################
+# S E C U R I T Y - M O N I T O R
+###############################################################################
+alarm_monitor:
+  module: alarm_monitor
+  class: AlarmMonitor
+  door_entity_id:
+    - *var_door_sensors
+  window_entity_id:
+    - *var_window_sensors
+  motion_entity_id:
+    - *var_motion_sensors
+  alarm_entity_id: alarm_control_panel.qolsys_alarm
+  alarm_motion_bypass_entity_id: input_boolean.is_alarm_motion_bypass
+
+
+alarm_notifier:
+  module: alarm_notifier
+  class: AlarmNotifier
+  is_vacation_mode_entity_id: input_boolean.is_vacation_mode
+  presence_mode_entity_id: input_select.presence_mode
+  entity_settings:
+    ## KITCHEN
+    binary_sensor.mqtt_kitchen_window:
+      camera_entity_id: camera.udmp_kitchen_medium_insecure
+    binary_sensor.group_kitchen_french_door:
+      camera_entity_id: camera.udmp_family_room_medium_insecure
+    binary_sensor.zb_kitchen_motion:
+      camera_entity_id: camera.udmp_kitchen_medium_insecure
+    binary_sensor.group_kitchen_motion:
+      camera_entity_id: camera.udmp_kitchen_medium_insecure
+
+    ## FAMILY ROOM
+    binary_sensor.mqtt_family_room_window:
+      camera_entity_id: camera.udmp_family_room_medium_insecure
+
+    # LIVING ROOM
+    binary_sensor.mqtt_living_room_window:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    binary_sensor.zb_living_room_motion:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    binary_sensor.group_living_room_motion:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+
+    # OFFICE
+    binary_sensor.mqtt_office_window:
+      camera_entity_id: camera.udmp_office_medium_insecure
+    binary_sensor.zb_office_motion:
+      camera_entity_id: camera.udmp_office_medium_insecure
+    binary_sensor.group_office_motion:
+      camera_entity_id: camera.udmp_office_medium_insecure
+
+    ## FRONT DOOR
+    binary_sensor.group_front_door:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    lock.zwave_front_door:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    binary_sensor.udmp_front_doorbell_doorbell:
+      camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+    binary_sensor.zb_front_door_motion:
+      camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+    binary_sensor.group_outside_front_door_motion:
+      camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+
+    ## LAUNDRY ROOM
+    binary_sensor.group_garage_entry_door:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    binary_sensor.mqtt_laundry_room_window:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    binary_sensor.zb_laundry_room_motion:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    binary_sensor.group_laundry_room_motion:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    lock.zwave_entry_door:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+
+    # MASTER BEDROOM
+    binary_sensor.group_master_bedroom_motion:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+    binary_sensor.zb_master_bedroom_motion:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+    binary_sensor.mqtt_master_bedroom_window:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+    binary_sensor.mqtt_master_bathroom_window:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+
+    ## LYNN'S ROOM
+    binary_sensor.group_lynn_s_room_motion:
+      camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+    binary_sensor.zb_lynn_s_room_motion:
+      camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+    binary_sensor.mqtt_lynns_room_window:
+      camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+
+    ## BASEMENT KITCHEN
+    binary_sensor.mqtt_basement_entry_door:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+    binary_sensor.zb_basement_living_room_motion:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+    binary_sensor.mqtt_basement_kitchen_motion:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+    binary_sensor.group_basement_kitchen_motion:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+
+    ## WORKOUT ROOM
+    binary_sensor.mqtt_workout_room_window:
+      camera_entity_id: camera.udmp_workout_room_medium_insecure
+    binary_sensor.zb_workout_room_motion:
+      camera_entity_id: camera.udmp_workout_room_medium_insecure
+    binary_sensor.group_workout_room_motion:
+      camera_entity_id: camera.udmp_workout_room_medium_insecure
+
+    ## FRONT YARD
+    binary_sensor.sh_front_yard_motion:
+      camera_entity_id: camera.udmp_front_yard_medium_insecure
+    binary_sensor.group_outside_front_yard_motion:
+      camera_entity_id: camera.udmp_front_yard_medium_insecure
+
+    ## BACKYARD
+    binary_sensor.zwave_backyard_motion:
+      camera_entity_id: camera.udmp_backyard_medium_insecure
+    input_boolean.is_person_detected_backyard:
+      camera_entity_id: camera.udmp_backyard_medium_insecure
+
+    ## SIDE ALLEY
+    binary_sensor.zb_side_alley_motion:
+      camera_entity_id: camera.udmp_shed_medium_insecure
+    binary_sensor.zb_shed_door:
+      camera_entity_id: camera.udmp_shed_medium_insecure
+
+    ## GARAGE DOOR
+    cover.hkc_front_garage_door:
+      camera_entity_id: camera.udmp_front_yard_medium_insecure
+    cover.hkc_back_garage_door:
+      camera_entity_id: camera.udmp_rear_driveway_medium_insecure
+
+
+alarm_state_announcer:
+  module: automation
+  class: Automation
+  variables:
+    pending_arm_message: "Alarm is about to arm."
+    pending_trigger_message: "Alarm is about to trigger."
+    armed_home_message: "Alarm armed for stay."
+    armed_away_message: "Alarm armed for away."
+    disarmed_message: "Alarm disarmed."
+    triggered_message: "Alarm triggered."
+  triggers:
+    - platform: state
+      entity_id: alarm_control_panel.qolsys_alarm
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "disarmed"
+          to: "pending"
+      actions:
+        - platform: announcement
+          tts_message: "{{ pending_arm_message }}"
+          notify_message: "⚠️ {{ pending_arm_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "disarmed"
+          to: "armed_home"
+      actions:
+        - platform: announcement
+          tts_message: "{{ armed_home_message }}"
+          notify_message: "✅ {{ armed_home_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "pending"
+          to: "armed_away"
+      actions:
+        - platform: announcement
+          tts_message: "{{ armed_away_message }}"
+          notify_message: "✅ {{ armed_away_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          to: "disarmed"
+      actions:
+        - platform: announcement
+          tts_message: "{{ disarmed_message }}"
+          notify_message: "✅ {{ disarmed_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_disarmed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "armed_away"
+          to: "pending"
+      actions:
+        - platform: announcement
+          tts_message: "{{ pending_trigger_message }}"
+          notify_message: "‼️ {{ pending_trigger_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          to: "triggered"
+        - platform: state
+          entity_id: input_boolean.is_vacation_mode
+          state: 'on'
+      actions:
+        - platform: announcement
+          tts_message: "Alarm is triggered.<break time=\".2s\" />You are being recorded.<break time=\".2s\" />Police have been contacted."
+          prelude_name: alarm_siren
+          notify_message: "‼️ {{ triggered_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+            critical: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          to: "triggered"
+      actions:
+        - platform: announcement
+          tts_message: "{{ triggered_message }}"
+          notify_message: "‼️ {{ triggered_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+            critical: true
+
+
+alarm_auto_arm:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: input_select.presence_mode
+      duration: 300
+  constraints:
+    - platform: state
+      entity_id: alarm_control_panel.qolsys_alarm
+      state: disarmed
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.presence_mode
+          to: No One is Home
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_away
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.sleeping_time
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_home
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+
+
+alarm_motion_bypass:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_vacuums
+        - alarm_control_panel.qolsys_alarm
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state: armed_away
+        - platform: state
+          entity_id: *var_vacuums
+          state: cleaning
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_alarm_motion_bypass
+    - actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_alarm_motion_bypass
+
+
+alarm_maintenance:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_outside_door_sensors
+        - *var_window_sensors
+        - *var_motion_sensors
+      to: "on"
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_alarm_maintenance
+      state: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: notify
+          message: "⚠️⚠️⚠️ {{ friendly_name(trigger_info.data.entity_id) }} is on"
+          recipient: joe
+          notifier: ios
+          ios:
+            url: /lovelace/view_alarm
+
+
+#outside:
+#  module: automation
+#  class: Automation
+#  triggers:
+#    - platform: state
+#      entity_ids:
+#        - *var_outside_motion_sensors
+#      to: "on"
+#  constraints:
+#    - platform: state
+#      entity_id: alarm_control_panel.qolsys_alarm
+#      state:
+#        - armed_away
+#        - armed_home
+#  handlers:
+#    - constraints:
+#      actions:
+#        - platform: service
+#          service: input_number/increment
+#          data:
+#            entity_id: input_number.outside_motion_count_front_door
+
+
+auto_garage_entry_door_lock:
+  log_level: WARNING
+  module: auto_lock
+  class: AutoLock
+  lock_entity_id: lock.zwave_entry_door
+  control_entity_id: binary_sensor.group_garage_entry_door
+
+
+auto_front_door_lock:
+  log_level: WARNING
+  module: auto_lock
+  class: AutoLock
+  lock_entity_id: lock.zwave_front_door
+  control_entity_id: binary_sensor.group_front_door
+
+
+entry_door_auto_unlock:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.joe_status
+        - input_select.yuyu_status
+      to: Just Arrived
+    - platform: state
+      entity_id: *var_garage_doors
+      to: open
+  constraints:
+    - platform: state
+      entity_id: lock.zwave_entry_door
+      state: locked
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "open"
+        - platform: state
+          entity_id: input_select.joe_status
+          state: "Just Arrived"
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+    - constraints:
+        - platform: triggered_state
+          to: "open"
+        - platform: state
+          entity_id: input_select.yuyu_status
+          state: "Just Arrived"
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+    - constraints:
+        - platform: triggered_state
+          to: "Just Arrived"
+        - platform: state
+          entity_id: cover.hkc_front_garage_door
+          state: open
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+    - constraints:
+        - platform: triggered_state
+          to: "Just Arrived"
+        - platform: state
+          entity_id: cover.hkc_back_garage_door
+          state: open
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+
+
+#lock_jammed_announcement:
+#  module: automation
+#  class: Automation
+#  variables:
+#    message: "{{ friendly_name(trigger_info.data.entity_id) | replace(' Jammed', '') | capitalize }} is jammed."
+#  triggers:
+#    - platform: state
+#      immediate: true
+#      entity_id:
+#        - binary_sensor.zwave_front_door_lock_jammed
+#        - binary_sensor.zwave_entry_door_lock_jammed
+#  handlers:
+#    - constraints:
+#        - platform: triggered_state
+#          to: "on"
+#      actions:
+#        - platform: announcement
+#          tts_message: "{{ message }}"
+#          notify_message: "⚠️ {{ message }}"
+#          notifier: ios
+
+
+power_outage_detector:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.synology_ups_input_voltage
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_out_of_power
+          state: "off"
+        - platform: state
+          entity_id: sensor.synology_ups_input_voltage
+          state: "<=80"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            input_boolean.is_out_of_power:
+              force_off: false
+        - platform: notify
+          message: "⚡️ Looks like there's a power outage ..."
+          recipient: all
+          notifier: ios
+          ios:
+            critical: true
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_out_of_power
+          state: "on"
+        - platform: state
+          entity_id: sensor.synology_ups_input_voltage
+          state: ">80"
+      actions:
+        - platform: turn_off
+          entity_ids:
+            input_boolean.is_out_of_power:
+              force_off: false
+        - platform: notify
+          message: "⚡️ Power is restored!"
+          recipient: all
+          notifier: ios
+
+
+qolsys_panel:
+  module: gateway
+  class: QolsysGateway
+  panel_host: !secret qolsys_panel_host
+  panel_token: !secret qolsys_panel_token
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  tesla.yaml
+###############################################################################
+
+###############################################################################
+# T E S L A
+###############################################################################
+
+tesla_model_x_location_updater:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id:
+        - sensor.mqtt_tesla_model_x_longitude
+        - sensor.mqtt_tesla_model_x_latitude
+        - sensor.mqtt_tesla_model_x_battery_level
+  handlers:
+    - constraints:
+      actions:
+        - platform: service
+          service: device_tracker/see
+          data:
+            dev_id: tesla_model_x
+            gps: '[{{ state("sensor.mqtt_tesla_model_x_latitude") }}, {{ state("sensor.mqtt_tesla_model_x_longitude") }}]'
+            battery: '{{ state("sensor.mqtt_tesla_model_x_battery_level") }}'
+
+
+tesla_model_y_location_updater:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id:
+        - sensor.mqtt_tesla_model_y_longitude
+        - sensor.mqtt_tesla_model_y_latitude
+        - sensor.mqtt_tesla_model_y_battery_level
+  handlers:
+    - constraints:
+      actions:
+        - platform: service
+          service: device_tracker/see
+          data:
+            dev_id: tesla_model_y
+            gps: '[{{ state("sensor.mqtt_tesla_model_y_latitude") }}, {{ state("sensor.mqtt_tesla_model_y_longitude") }}]'
+            battery: '{{ state("sensor.mqtt_tesla_model_y_battery_level") }}'
+
+
+tesla_model_x_charge_limit:
+  module: automation
+  class: Automation
+  variables:
+    message: "Tesla Model X is charging with charging limit less than 90%."
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.mqtt_tesla_model_x_state
+  constraints:
+    - platform: triggered_state
+      to: charging
+    - platform: state
+      entity_id: binary_sensor.mqtt_tesla_model_x_plugged_in
+      state: "on"
+    - platform: state
+      entity_id: sensor.template_presence_tesla_model_x
+      state: "home"
+      negate: true
+    - platform: state
+      entity_id: sensor.mqtt_tesla_model_x_charge_limit
+      state: '<90'
+  handlers:
+    - actions:
+        - platform: notify
+          message: "⚠️ {{ message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            notification_template_name: tesla_monitor
+
+
+tesla_model_y_charge_limit:
+  module: automation
+  class: Automation
+  variables:
+    message: "Tesla Model Y is charging with charging limit less than 90%."
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.mqtt_tesla_model_y_state
+  constraints:
+    - platform: triggered_state
+      to: charging
+    - platform: state
+      entity_id: binary_sensor.mqtt_tesla_model_y_plugged_in
+      state: "on"
+    - platform: state
+      entity_id: sensor.template_presence_tesla_model_y
+      state: "home"
+      negate: true
+    - platform: state
+      entity_id: sensor.mqtt_tesla_model_y_charge_limit
+      state: '<90'
+  handlers:
+    - actions:
+        - platform: notify
+          message: "⚠️ {{ message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            notification_template_name: tesla_monitor
+
+
+tesla_firmware_update:
+  module: automation
+  class: Automation
+  variables:
+    message: "New software update is available for {{ friendly_name(trigger_info.data.entity_id) | replace(' Update Available', '') }}"
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.mqtt_tesla_model_x_update_available
+        - binary_sensor.mqtt_tesla_model_y_update_available
+      to: "on"
+  constraints:
+  handlers:
+    - actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_message: "🚗️ {{ message }}"
+          notifier: ios
+          ios:
+            notification_template_name: tesla_monitor
+
+
+tesla_auto_lock_at_home:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: lock
+          entity_id: lock.template_tesla_model_x_door
+          notifier: ios
+          notify_message: "🚗🔒 Auto locked Tesla Model X for sleeping time"
+          constraints:
+            - platform: state
+              entity_id: device_tracker.tesla_model_x
+              state: home
+            - platform: state
+              entity_id: lock.template_tesla_model_x_door
+              state: unlocked
+        - platform: lock
+          entity_id: lock.template_tesla_model_y_door
+          notifier: ios
+          notify_message: "🚗🔒 Auto locked Tesla Model Y for sleeping time"
+          constraints:
+            - platform: state
+              entity_id: device_tracker.tesla_model_y
+              state: home
+            - platform: state
+              entity_id: lock.template_tesla_model_y_door
+              state: unlocked
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  upstairs.yaml
+###############################################################################
+
+###############################################################################
+# U P S T A I R S  H A L L W A Y
+###############################################################################
+upstairs_hallway_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  scene_entity_id: input_select.lighting_mode_upstairs
+  motion_entity_id:
+    - binary_sensor.mqtt_upstairs_hallway_motion
+    - binary_sensor.m2_upstair_hallway_motion
+  turn_off_delay: 90
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.hue_upstairs_hallway_light
+          brightness: 220
+    # scenes for hue_upstairs_hallway_light_1 only
+    - scene_name: Sleeping
+      constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_upstair_hallway_motion
+      lights:
+        - entity_id: light.hue_upstairs_hallway_light_1
+          brightness: 100
+    - scene_name: Midnight
+      constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_upstair_hallway_motion
+      lights:
+        - entity_id: light.hue_upstairs_hallway_light_1
+          brightness: 1
+    # scenes for hue_upstairs_hallway_light_2 only
+    - scene_name: Sleeping
+      constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.mqtt_upstairs_hallway_motion
+      lights:
+        - entity_id: light.hue_upstairs_hallway_light_2
+          brightness: 100
+    - scene_name: Midnight
+      constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.mqtt_upstairs_hallway_motion
+      lights:
+        - entity_id: light.hue_upstairs_hallway_light_2
+          brightness: 1
+      turn_off_delay: 30
+
+
+
+###############################################################################
+# S H O W E R   R O O M
+###############################################################################
+shower_room_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.zb_shower_room_motion
+    - input_boolean.is_showering_shower_room
+  turn_off_delay: 300
+  scenes:
+    - scene_name: Default
+      lights:
+        - light.zb_shower_room_light
+    - scene_name: Sleeping
+      # don't turn on anything
+
+
+shower_room_shower_auto_scene:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_showering_shower_room
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          from: 'off'
+          to: 'on'
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - input_boolean.is_scene_shower_time_shower_room
+            - light.zb_shower_room_fan
+        - platform: override_announcer_player_volume
+          entity_id: media_player.gh_shower_room
+          volume: 0.7
+    - constraints:
+        - platform: triggered_state
+          from: 'on'
+          to: 'off'
+      actions:
+        - platform: turn_off_media_player
+          entity_id: media_player.gh_shower_room
+        - platform: override_announcer_player_volume
+          entity_id: media_player.gh_shower_room
+
+
+shower_room_auto_fan:
+  log_level: DEBUG
+  module: humidity_controlled_fan
+  class: HumidityControlledFan
+  fan_entity_id: light.zb_shower_room_fan
+  trigger_entity_id: input_boolean.is_showering_shower_room
+  trigger_from_states: 'off'
+  trigger_to_states: 'on'
+  humidity_entity_id: sensor.zb_shower_room_humidity
+  target_humidity_diff_in_percent: 5
+  max_fan_runtime_in_min: 120
+  turn_on_fan_delay_in_min: 0
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  upstairs_kids_bath_room.yaml
+###############################################################################
+
+kids_bathroom_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  scene_entity_id: input_select.lighting_mode_upstairs
+  motion_entity_id: binary_sensor.zb_kids_bathroom_motion
+  turn_off_delay: 60
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.yeelight_kids_bathroom_lightstrip
+          brightness: 255
+          rgb_color: [255, 203, 114]
+        - entity_id: light.hue_kids_bathroom_light
+          brightness: 255
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.yeelight_kids_bathroom_lightstrip
+          brightness: 75
+          rgb_color: [255, 203, 114]
+        - entity_id: light.hue_kids_bathroom_light
+          brightness: 50
+    - scene_name: Midnight
+      lights:
+        - entity_id: light.yeelight_kids_bathroom_lightstrip
+          brightness: 25
+          rgb_color: [255, 203, 114]
+
+
+kids_bathroom_auto_blind:
+  module: automation
+  class: Automation
+  variables:
+    door_monitor_start_time: '07:00:00'
+    open_time: '08:30:00'
+    close_time: 'sunrise - 00:30:00'
+  triggers:
+    - platform: time
+      time:
+        - '{{open_time}}'
+        - '{{close_time}}'
+    - platform: state
+      entity_id:
+        - binary_sensor.m2_lynn_s_room_door
+        - binary_sensor.sleeping_time
+        - sun.sun
+  handlers:
+    - constraints:
+        - platform: triggered_time
+          time: '{{open_time}}'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 100
+    - constraints:
+        - platform: triggered_time
+          time: '{{close_time}}'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 60
+    # when door==open
+    # if time_between=8:00&9:30 + blind_is_closed
+    # then open_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          to: "on"
+        - platform: time
+          start_time: '{{door_monitor_start_time}}'
+          end_time: '{{open_time}}'
+        - platform: attribute
+          entity_id: cover.zb_kids_bathroom_blind
+          attribute: current_position
+          value: '<=65'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 100
+    # when door_is_closed or sleeping_time
+    # if door_is_closed + sleeping_time + sun_still_up + blind_is_opened
+    # then close_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id:
+            - binary_sensor.m2_lynn_s_room_door
+            - binary_sensor.sleeping_time
+        - platform: state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          state: "off"
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: 'on'
+        - platform: state
+          entity_id: sun.sun
+          state: above_horizon
+        - platform: attribute
+          entity_id: cover.zb_kids_bathroom_blind
+          attribute: current_position
+          value: '>=95'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 60
+
+
+
+###############################################################################
+# M E R G E D  F R O M  upstairs_lynn_s_room.yaml
+###############################################################################
+
+lynns_room_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_lynns_room
+  scene_entity_id: input_select.lighting_mode_upstairs
+  motion_entity_id: binary_sensor.zb_lynn_s_room_under_bed_motion
+  turn_off_delay: 60
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.hue_lynn_s_room_lightstrip
+          brightness: 75
+          rgb_color: [ 255, 203, 114 ]
+        - entity_id: light.hue_lynn_s_room_lamp
+          brightness: 10
+          rgb_color: [ 255, 203, 114 ]
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.hue_lynn_s_room_lightstrip
+          brightness: 50
+          rgb_color: [ 255, 203, 114 ]
+    - scene_name: Midnight
+      lights:
+        - entity_id: light.hue_lynn_s_room_lightstrip
+          brightness: 20
+          rgb_color: [ 255, 203, 114 ]
+
+
+lynns_room_button:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: homekit_controller_device_event
+  constraints:
+    - platform: triggered_event
+      event_data:
+        device_id: 2457a428d2b2246c892ad5fddca15812
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            subtype: long_press
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.hue_lynn_s_room_lightstrip
+              brightness: 1
+              rgb_color: [ 255, 203, 114 ]
+        - platform: turn_off
+          entity_ids:
+            - input_boolean.is_motion_enabled_lynns_room
+        - platform: delay
+          delay: 3600
+          actions:
+            - platform: turn_on
+              entity_ids:
+                - input_boolean.is_motion_enabled_lynns_room
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            subtype: double_press
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.hue_lynn_s_room_ceiling_light
+              brightness: 255
+              rgb_color: [ 255, 203, 114 ]
+        - platform: turn_off
+          entity_ids:
+            - input_boolean.is_motion_enabled_lynns_room
+        - platform: delay
+          delay: 3600
+          actions:
+            - platform: turn_on
+              entity_ids:
+                - input_boolean.is_motion_enabled_lynns_room
+    - constraints:
+        - platform: state
+          entity_id: light.hue_lynn_s_room_lightstrip
+          state: "off"
+        - platform: triggered_event
+          event_data:
+            subtype: single_press
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.hue_lynn_s_room_lightstrip
+              brightness: 65
+              rgb_color: [ 255, 203, 114 ]
+            - entity_id: light.hue_lynn_s_room_lamp
+              brightness: 10
+              rgb_color: [ 255, 203, 114 ]
+        - platform: turn_off
+          entity_ids:
+            - input_boolean.is_motion_enabled_lynns_room
+        - platform: delay
+          delay: 600
+          actions:
+            - platform: turn_on
+              entity_ids:
+                - input_boolean.is_motion_enabled_lynns_room
+    - constraints:
+        - platform: state
+          entity_id: light.hue_lynn_s_room_lightstrip
+          state: "on"
+        - platform: triggered_event
+          event_data:
+            subtype: single_press
+      actions:
+        - platform: turn_off
+          dim_light_before_turn_off: false
+          entity_ids:
+            - light.hue_lynn_s_room_lightstrip
+            - light.hue_lynn_s_room_lamp
+            - light.hue_lynn_s_room_ceiling_light
+            - light.hue_kids_bathroom_light
+            - light.yeelight_kids_bathroom_lightstrip
+            - light.xiaomi_upstairs_hallway_night_light
+            - light.hue_upstairs_hallway_light
+        - platform: turn_on
+          entity_ids:
+            - input_boolean.is_motion_enabled_lynns_room
+
+
+lynns_room_occupancy_monitor:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.m2_lynn_s_room_door
+        - binary_sensor.zb_lynn_s_room_motion
+        - binary_sensor.zb_lynn_s_room_under_bed_motion
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          to: "on"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_lynn_s_room
+          option: UNKNOWN
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          to: "off"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_lynn_s_room
+          option: OCCUPIED
+          constraints:
+            - platform: state
+              entity_id: media_player.lynns_room
+              state: playing
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_lynn_s_room
+          option: UNOCCUPIED
+          constraints:
+            - platform: state
+              entity_id: media_player.lynns_room
+              state: playing
+              negate: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id:
+            - binary_sensor.zb_lynn_s_room_motion
+            - binary_sensor.zb_lynn_s_room_under_bed_motion
+          to: "on"
+        - platform: state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          state: 'off'
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_lynn_s_room
+          option: OCCUPIED
+
+
+lynns_room_wakeup_lighting:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: time
+      time: "08:30:00"
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - entity_id: light.hue_lynn_s_room_lamp
+              brightness: 5
+              rgb_color: [ 255, 203, 114 ]
+
+
+lynns_room_temperature_difference_heater_booster:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.template_lynn_s_room_temperature
+        - sensor.template_master_bedroom_temperature
+  constraints:
+    - platform: time
+      start_time: "22:30:00"
+      end_time: "06:30:00"
+    - platform: state
+      entity_id: input_select.last_climate_hvac_action
+      state: heating
+    - platform: state
+      entity_id: input_boolean.is_auto_fan_enabled_lynns_room
+      state: 'on'
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: climate.dyson_lynns_room
+          state: heat
+          negate: true
+        - platform: template
+          template: >
+            {{ (state('input_number.main_floor_target_temp_low') | float) - (state('sensor.template_lynn_s_room_temperature') | float) }}
+          expected_value: ">=0.5"
+        - platform: template
+          template: >
+            {{ (state('sensor.template_master_bedroom_temperature') | float) - (state('sensor.template_lynn_s_room_temperature') | float) }}
+          expected_value: >
+            {% if now_is_between('23:00:00', '01:00:00') %}
+            >=1.5
+            {% else %}
+            >=0.5
+            {% endif %}
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+      actions:
+        - platform: service
+          service: climate/set_temperature
+          data:
+            entity_id: climate.dyson_lynns_room
+            temperature: 24
+            hvac_mode: heat
+        - platform: service
+          service: climate/turn_on
+          data:
+            entity_id: climate.dyson_lynns_room
+        - platform: delay
+          delay: 1200
+          actions:
+            - platform: service
+              service: climate/turn_off
+              data:
+                entity_id: climate.dyson_lynns_room
+
+    - constraints:
+        - platform: state
+          entity_id: climate.dyson_lynns_room
+          state: heat
+        - platform: template
+          template: >
+            {{ (state('sensor.template_lynn_s_room_temperature') | float) - (state('input_number.main_floor_target_temp_low') | float) }}
+          expected_value: ">=0.1"
+      actions:
+        - platform: service
+          service: climate/turn_off
+          data:
+            entity_id: climate.dyson_lynns_room
+
+    - constraints:
+        - platform: state
+          entity_id: climate.dyson_lynns_room
+          state: heat
+        - platform: template
+          template: >
+            {{ (state('sensor.template_master_bedroom_temperature') | float) - (state('sensor.template_lynn_s_room_temperature') | float) }}
+          expected_value: >
+            {% if now_is_between('23:00:00', '01:00:00') %}
+            <=0.5
+            {% else %}
+            <=0
+            {% endif %}
+      actions:
+        - platform: service
+          service: climate/turn_off
+          data:
+            entity_id: climate.dyson_lynns_room
+
+
+
+#lynns_room_morning_heater_booster:
+#  module: automation
+#  class: Automation
+#  triggers:
+#    - platform: time
+#      time: "06:50:00"
+#    - platform: state
+#      entity_id: sensor.template_lynn_s_room_temperature
+#  variables:
+#    temperature_threshold: 24
+#  constraints:
+#    - platform: state
+#      entity_id: input_select.last_climate_hvac_action
+#      state: heating
+#    - platform: state
+#      entity_id: input_boolean.is_auto_fan_enabled_lynns_room
+#      state: 'on'
+#  handlers:
+#    - constraints:
+#        - platform: time
+#          start_time: "06:30:00"
+#          end_time: "07:00:00"
+#        - platform: state
+#          entity_id: climate.dyson_lynns_room
+#          state: heat
+#          negate: true
+#        - platform: state
+#          entity_id: sensor.template_lynn_s_room_temperature
+#          state: '<{{temperature_threshold}}'
+#        - platform: state
+#          entity_id: input_select.occupancy_lynn_s_room
+#          state: OCCUPIED
+#      actions:
+#        - platform: service
+#          service: climate/set_temperature
+#          data:
+#            entity_id: climate.dyson_lynns_room
+#            temperature: '{{temperature_threshold}}'
+#            hvac_mode: heat
+#        - platform: service
+#          service: climate/turn_on
+#          data:
+#            entity_id: climate.dyson_lynns_room
+#        - platform: delay
+#          delay: 1800
+#          actions:
+#            - platform: service
+#              service: climate/turn_off
+#              data:
+#                entity_id: climate.dyson_lynns_room
+#
+#    - constraints:
+#        - platform: state
+#          entity_id: climate.dyson_lynns_room
+#          state: heat
+#        - platform: state
+#          entity_id: sensor.template_lynn_s_room_temperature
+#          state: '>={{temperature_threshold}}'
+#      actions:
+#        - platform: service
+#          service: climate/turn_off
+#          data:
+#            entity_id: climate.dyson_lynns_room
+
+
+lynn_s_room_temperature_monitor:
+  module: automation
+  class: Automation
+  throttle_in_seconds: 1800
+  triggers:
+    - platform: state
+      entity_id: sensor.template_lynn_s_room_temperature
+  constraints:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      state: "on"
+    - platform: state
+      entity_id: input_select.occupancy_lynn_s_room
+      state: OCCUPIED
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: sensor.template_lynn_s_room_temperature
+          state: '>= 26.5'
+        - platform: state
+          entity_id: binary_sensor.trend_temp_rising_sensor_lynn_s_room_temperature
+          state: "on"
+      actions:
+        - platform: notify
+          recipient: all
+          notifier: ios
+          message: "🥵 Lynn's room temperature is too high ({{ state(trigger_info.data.entity_id) }}°C)"
+          camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+          ios:
+            critical: true
+            volume: 0.5
+    - constraints:
+        - platform: state
+          entity_id: sensor.template_lynn_s_room_temperature
+          state: '<= 21'
+        - platform: state
+          entity_id: binary_sensor.trend_temp_falling_sensor_lynn_s_room_temperature
+          state: "on"
+      actions:
+        - platform: notify
+          recipient: all
+          notifier: ios
+          message: "😰 Lynn's room temperature is too low ({{ state(trigger_info.data.entity_id) }}°C)"
+          camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+          ios:
+            critical: true
+            volume: 0.5
+            actions:
+              - action: 'TURN_OFF_MASTER_BEDROOM_ONLY_MODE'
+                title: 'Turn Off Master Bedroom Only Mode'
+              - action: 'SET_UNOCCUPIED_LYNN_S_ROOM'
+                title: 'Set Unoccupied'
+
+
+lynn_s_room_window_monitor:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.mqtt_lynns_room_window
+      from: "off"
+      to: "on"
+  constraints:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      state: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: notify
+          recipient: all
+          notifier: ios
+          message: "⚠️ Lynn's room window is opened"
+          camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+          ios:
+            critical: true
+            volume: 0.7
+
+lynn_s_room_sleep_music_auto_play:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_select.occupancy_lynn_s_room
+      to: OCCUPIED
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "on"
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.lynns_room
+          volume: 0.02
+          source: 'Baby Lullaby Essential Classical Lullabies for Sleeping Baby'
+
+lynn_s_room_sleep_music_auto_play2:
+  module: automation
+  class: Automation
+  variables:
+    play_time:
+      - "05:00:00"
+    stop_time:
+      - "08:00:00"
+  triggers:
+    - platform: time
+      time: '{{play_time}}'
+    - platform: time
+      time: '{{stop_time}}'
+  handlers:
+    - constraints:
+        - platform: triggered_time
+          time: '{{play_time}}'
+        - platform: state
+          entity_id: media_player.lynns_room
+          state: playing
+          negate: true
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.lynns_room
+          volume: 0.02
+          source: 'Baby Lullaby Essential Classical Lullabies for Sleeping Baby'
+    - constraints:
+        - platform: triggered_time
+          time: '{{stop_time}}'
+        - platform: state
+          entity_id: media_player.lynns_room
+          state: playing
+      actions:
+        - platform: turn_off_media_player
+          entity_id: media_player.lynns_room
+
+
+lynn_s_room_climate_comfort_level:
+  module: climate_comfort_mode_monitor
+  class: ClimateComfortModeMonitor
+  temperature_entity_id: sensor.template_lynn_s_room_temperature
+  climate_comfort_level_entity_id: input_select.climate_comfort_level_lynn_s_room
+  target_temp_high: input_number.main_floor_target_temp_high
+  target_temp_low: input_number.main_floor_target_temp_low
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  upstairs_master_bedroom.yaml
+###############################################################################
+
+master_bedroom_light_monitor:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.sh_master_bedroom_ceiling_light_iput
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          from: ["on", "off"]
+          to: ["on", "off"]
+      actions:
+        - platform: toggle
+          entity_ids:
+            - entity_id: light.hue_master_bedroom_light
+              brightness: 254
+
+
+master_bedroom_occupancy_monitor:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.m2_master_bedroom_door
+        - binary_sensor.group_master_bedroom_motion
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_master_bedroom_door
+          to: "on"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_master_bedroom
+          option: UNKNOWN
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_master_bedroom_door
+          to: "off"
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_master_bedroom
+          option: OCCUPIED
+          constraints:
+            - platform: state
+              entity_id: media_player.master_bedroom
+              state: playing
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_master_bedroom
+          option: UNOCCUPIED
+          constraints:
+            - platform: state
+              entity_id: media_player.master_bedroom
+              state: playing
+              negate: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id:
+            - binary_sensor.group_master_bedroom_motion
+          to: "on"
+        - platform: state
+          entity_id: binary_sensor.m2_master_bedroom_door
+          state: 'off'
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_master_bedroom
+          option: OCCUPIED
+
+
+master_bathroom_auto_blind:
+  module: automation
+  class: Automation
+  variables:
+    door_monitor_start_time: '08:00:00'
+    open_time: '09:30:00'
+    close_time: 'sunrise - 00:30:00'
+  triggers:
+    - platform: time
+      time:
+        - '{{open_time}}'
+        - '{{close_time}}'
+    - platform: state
+      entity_id:
+        - binary_sensor.zb_master_bathroom_door
+        - binary_sensor.sleeping_time
+        - sun.sun
+  handlers:
+    - constraints:
+        - platform: triggered_time
+          time: '{{open_time}}'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_master_bathroom_blind
+            position: 100
+    - constraints:
+        - platform: triggered_time
+          time: '{{close_time}}'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_master_bathroom_blind
+            position: 40
+    # when door==open
+    # if time_between=8:00&9:30 + blind_is_closed
+    # then open_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.zb_master_bathroom_door
+          to: "on"
+        - platform: time
+          start_time: '{{door_monitor_start_time}}'
+          end_time: '{{open_time}}'
+        - platform: attribute
+          entity_id: cover.zb_master_bathroom_blind
+          attribute: current_position
+          value: '<=50'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_master_bathroom_blind
+            position: 100
+    # when sunset
+    # if window_is_open + blind_is_closed
+    # then open_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id: sun.sun
+          to: "below_horizon"
+        - platform: state
+          entity_id: binary_sensor.mqtt_master_bathroom_window
+          state: "on"
+        - platform: attribute
+          entity_id: cover.zb_master_bathroom_blind
+          attribute: current_position
+          value: '<=50'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_master_bathroom_blind
+            position: 100
+    # when door_is_closed or sleeping_time
+    # if door_is_closed + sleeping_time + sun_still_up + blind_is_opened
+    # then close_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id:
+            - binary_sensor.zb_master_bathroom_door
+            - binary_sensor.sleeping_time
+        - platform: state
+          entity_id: binary_sensor.zb_master_bathroom_door
+          state: "off"
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: 'on'
+        - platform: state
+          entity_id: sun.sun
+          state: above_horizon
+        - platform: attribute
+          entity_id: cover.zb_master_bathroom_blind
+          attribute: current_position
+          value: '>=95'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_master_bathroom_blind
+            position: 40
+
+master_bathroom_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_master_bathroom
+  darkness_entity_id: input_select.darkness_level_upstairs_master_bathroom
+  scene_entity_id: input_select.lighting_mode_master_bathroom
+  motion_entity_id: binary_sensor.zb_master_bathroom_motion
+  turn_off_delay: 3600
+  turn_on_constraints:
+    - platform: state
+      entity_id: switch.tp_master_bathroom_ceiling_light
+      state: "off"
+    - platform: state
+      entity_id: light.tp_master_bathroom_light
+      state: "off"
+  scenes:
+    - scene_name: Default
+      lights:
+        - entity_id: switch.tp_master_bathroom_ceiling_light
+        - entity_id: light.tp_master_bathroom_light
+          brightness: 254
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.tp_master_bathroom_light
+          brightness: 125
+    - scene_name: Midnight
+      # don't turn on anything
+
+
+master_bathroom_shower_mode:
+  module: automation
+  class: Automation
+  variables:
+    shower_watt_threshold: 16.0
+  triggers:
+    - platform: state
+      entity_id: sensor.shower_control_current_consumption
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: '>={{shower_watt_threshold}}'
+        - platform: state
+          entity_id: input_boolean.is_showering_master_bedroom
+          state: 'off'
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_showering_master_bedroom
+    - constraints:
+        - platform: triggered_state
+          to: '<{{shower_watt_threshold}}'
+        - platform: state
+          entity_id: input_boolean.is_showering_master_bedroom
+          state: 'on'
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_showering_master_bedroom
+
+
+master_bathroom_auto_scene:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_showering_master_bedroom
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          from: 'off'
+          to: 'on'
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_scene_shower_time
+    - constraints:
+        - platform: triggered_state
+          from: 'on'
+          to: 'off'
+      actions:
+        - platform: turn_off_media_player
+          entity_id: media_player.master_bathroom
+
+
+master_bathroom_auto_fan:
+  module: humidity_controlled_fan
+  class: HumidityControlledFan
+  fan_entity_id: switch.tp_master_bathroom_fan
+  trigger_entity_id: input_boolean.is_showering_master_bedroom
+  trigger_from_states: 'off'
+  trigger_to_states: 'on'
+  humidity_entity_id: sensor.zb_master_bathroom_humidity
+  target_humidity_diff_in_percent: 5
+  max_fan_runtime_in_min: 120
+  turn_on_fan_delay_in_min: 10
+
+
+master_bathroom_window:
+  module: automation
+  class: Automation
+  variables:
+    message: "Master bathroom window is still open."
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.zb_side_alley_temperature
+        - binary_sensor.mqtt_master_bathroom_window
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.mqtt_master_bathroom_window
+          state: 'on'
+        - platform: state
+          entity_id: sensor.zb_side_alley_temperature
+          state: '<10'
+        - platform: has_scheduled_job
+          negate: true
+      actions:
+        - platform: repeat
+          repeat: 3600
+          delay: 3600
+          actions:
+            - platform: announcement
+              tts_message: "{{ message }}"
+              notify_trigger_entity_id: binary_sensor.mqtt_master_bathroom_window
+              notify_message: "⚠️ {{ message }}"
+              notifier: ios
+              ios:
+                thread_id: Door Monitor
+                url: /lovelace/view_alarm
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.mqtt_master_bathroom_window
+          state: 'off'
+        - platform: has_scheduled_job
+      actions:
+        - platform: cancel_job
+
+    - constraints:
+        - platform: state
+          entity_id: sensor.zb_side_alley_temperature
+          state: '>=10'
+        - platform: has_scheduled_job
+      actions:
+        - platform: cancel_job
+
+walkin_closet_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id: binary_sensor.zb_master_bedroom_closet_motion
+  turn_off_delay: 20
+  scenes:
+    - scene_name: Default
+      lights:
+        - switch.tp_master_bedroom_walkin_closet_light
+
+master_bedroom_sleep_music_auto_play:
+  module: automation
+  class: Automation
+  variables:
+    play_time:
+      - "05:00:00"
+      - "20:45:00"
+    stop_time:
+      - "09:30:00"
+  triggers:
+    - platform: time
+      time: '{{play_time}}'
+    - platform: time
+      time: '{{stop_time}}'
+  handlers:
+    - constraints:
+        - platform: triggered_time
+          time: '{{play_time}}'
+        - platform: state
+          entity_id: media_player.master_bedroom
+          state: playing
+          negate: true
+        - platform: state
+          entity_id: input_select.presence_mode
+          state: No One is Home
+          negate: true
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bedroom
+          volume: 0.02
+          source: 'Baby Lullaby Essential Classical Lullabies for Sleeping Baby'
+        - platform: turn_on
+          entity_ids: switch.sonos_master_bedroom_crossfade
+    - constraints:
+        - platform: triggered_time
+          time: '{{stop_time}}'
+        - platform: state
+          entity_id: media_player.master_bedroom
+          state: playing
+      actions:
+        - platform: turn_off_media_player
+          entity_id: media_player.master_bedroom
+
+
+master_bedroom_climate_comfort_level:
+  module: climate_comfort_mode_monitor
+  class: ClimateComfortModeMonitor
+  temperature_entity_id: sensor.template_master_bedroom_temperature
+  climate_comfort_level_entity_id: input_select.climate_comfort_level_master_bedroom
+  target_temp_high: input_number.main_floor_target_temp_high
+  target_temp_low: input_number.main_floor_target_temp_low
+
+
+master_bedroom_kasa_led_monitor:
+  module: kasa_led_monitor
+  class: KasaLedMonitor
+  enabler_entity_id: input_boolean.is_kasa_led_enabled_master_bedroom
+  kasa_entity_id:
+    - switch.tp_master_bathroom_light_led
+    - switch.tp_master_bathroom_ceiling_light_led
+    - switch.tp_master_bathroom_fan_led
+    - switch.tp_master_bedroom_walkin_closet_light_led
+  control_entity_id:
+    - switch.sh_master_bedroom_wall_light
+    - light.hue_master_bedroom_light
+    - binary_sensor.zb_master_bathroom_door
+    - binary_sensor.m2_master_bedroom_door
+
+
+
+
+###############################################################################
+# M E R G E D  F R O M  vacuum.yaml
+###############################################################################
+
+downstair_vacuum_dustbin_monitor:
+  log_level: DEBUG
+  module: vacuum_dustbin_monitor
+  class: VacuumDustbinMonitor
+  runtime_entity_id: input_number.vacuum_cleaned_area_count
+  monitor_state_entity_id: input_select.vacuum_dustbin_monitor_state
+  vacuum_entity_id: vacuum.xiaomi_downstairs_vacuum
+  vacuum_last_cleaned_area_entity_id: sensor.xiaomi_downstairs_vacuum_last_clean_area
+  vacuum_current_cleaned_area_entity_id: sensor.xiaomi_downstairs_vacuum_current_clean_area
+  vacuum_clean_start_entity_id: sensor.xiaomi_downstairs_vacuum_last_clean_start
+  vacuum_clean_end_entity_id: sensor.xiaomi_downstairs_vacuum_last_clean_end
+  vacuum_current_clean_duration: sensor.xiaomi_downstairs_vacuum_current_clean_duration
+  vacuum_last_clean_duration: sensor.xiaomi_downstairs_vacuum_last_clean_duration
+  cleaned_count_threshold: 200
+  dumping_spot_x_coord: 27000
+  dumping_spot_y_coord: 38000
+
+
+upstair_vacuum_dustbin_monitor:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  variables:
+    message: "Upstairs vacuum dustbin is full."
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.upstairs_vacuum_bin_full
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_message: "⚠️ {{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Vacuum
+            url: /lovelace/view_home
+
+
+downstairs_vacuum_cleaner:
+  module: vacuum_cleaner
+  class: VacuumCleaner
+  webhook_id: 784b8a515573f1d083c0b83676da4ce632942058318bcfad1e6faa066b4c5002
+  vacuum_entity_id: vacuum.xiaomi_downstairs_vacuum
+  areas:
+    kitchen: 19
+    family room: 18
+    hallway: 17
+
+
+
+

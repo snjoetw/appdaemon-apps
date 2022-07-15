@@ -1,0 +1,838 @@
+###############################################################################
+# S E C U R I T Y
+###############################################################################
+
+last_home_movement:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_motion_sensors
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_value
+          entity_id: input_text.last_home_movement
+          value: "{{ friendly_name(trigger_info.data.entity_id) }}"
+
+
+window_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: *var_window_sensors
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_window_inside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+    - constraints:
+        - platform: state
+          entity_id: *var_window_sensors
+          state: [ "off", "unavailable", "unknown" ]
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_window_inside
+          state: "off"
+
+
+door_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_outside_door_sensors
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_door_inside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+    - constraints:
+        - platform: state
+          entity_id:
+            - *var_door_sensors
+            - *var_outside_door_sensors
+          state: [ "off", "unavailable", "unknown" ]
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_door_inside
+          state: "off"
+
+
+motion_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_motion_sensors
+        - *var_outside_motion_sensors
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_downstairs_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_downstairs
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_downstairs
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_downstairs_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_upstairs_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_upstairs
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_upstairs
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_upstairs_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_basement_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_basement
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_basement
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_basement_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_outside_motion_sensors
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_outside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ friendly_name(trigger_info.data.entity_id) }}"
+            last_triggered_entity_id: "{{ trigger_info.data.entity_id }}"
+          constraints:
+            - platform: triggered_state
+              to: "on"
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_outside
+          state: "off"
+          constraints:
+            - platform: state
+              entity_id: *var_outside_motion_sensors
+              state: [ "off", "unavailable", "unknown" ]
+              match_all: true
+
+
+inside_motion_tracker:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_boolean.ad_motion_downstairs
+        - input_boolean.ad_motion_upstairs
+        - input_boolean.ad_motion_basement
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_inside
+          state: "on"
+          attributes:
+            last_triggered_name: "{{ state_attr(trigger_info.data.entity_id, 'last_triggered_name') }}"
+            last_triggered_entity_id: "{{ state_attr(trigger_info.data.entity_id, 'last_triggered_entity_id') }}"
+    - constraints:
+        - platform: state
+          entity_id:
+            - input_boolean.ad_motion_downstairs
+            - input_boolean.ad_motion_upstairs
+            - input_boolean.ad_motion_basement
+          state: "off"
+          match_all: true
+      actions:
+        - platform: set_state
+          entity_id: input_boolean.ad_motion_inside
+          state: "off"
+
+
+###############################################################################
+# S E C U R I T Y - B E E P
+###############################################################################
+door_beep:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  variables:
+    state_icons:
+      'on': ⚠️
+      'off': ✅
+      'unavailable': ‼️
+    message: "{{ state(trigger_info.data.entity_id, state_icons) }} {{ friendly_name(trigger_info.data.entity_id) }} is {{ state(trigger_info.data.entity_id, {'on':'opened', 'off':'closed'}) }}"
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_outside_door_sensors
+        - *var_window_sensors
+      attribute: state
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_door_sensors
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: door_beep
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          volume_mode: regular
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Door Monitor
+            url: /lovelace/view_alarm
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_outside_door_sensors
+      actions:
+        - platform: announcement
+          tts_message: "<prosody rate=\"90%\">{{ friendly_name(trigger_info.data.entity_id) }} is {{ state(trigger_info.data.entity_id, {'on':'opened', 'off':'closed'}) }}</prosody>"
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          volume_mode: regular
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Door Monitor
+            url: /lovelace/view_alarm
+
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_window_sensors
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: window_beep
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Window Monitor
+            url: /lovelace/view_alarm
+
+
+garage_door_beep:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  variables:
+    state_icons:
+      'open': ⚠️
+      'opening': ⚠️
+      'closed': ✅
+      'closing': ⚠️
+      'on': ⚠️
+      'off': ✅
+    message: "{{ state(trigger_info.data.entity_id, state_icons) }} {{ friendly_name(trigger_info.data.entity_id) }} is {{ state(trigger_info.data.entity_id, {'on':'opened', 'off':'closed'}) }}"
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_garage_doors
+      attribute: state
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: *var_garage_doors
+      actions:
+        - platform: announcement
+          tts_message: ''
+          prelude_name: garage_beep
+          player_entity_id:
+            - media_player.gh_laundry_room
+            - media_player.gh_family_room
+          notify_trigger_entity_id: "{{ trigger_info.data.entity_id }}"
+          notify_message: "{{ message }}"
+          notifier: ios
+          ios:
+            notification_template_name: garage_opened_closed
+        - platform: service
+          service: mqtt/publish
+          data:
+            topic: home/alarm/notification
+            payload: garage
+
+###############################################################################
+# S E C U R I T Y - M O N I T O R
+###############################################################################
+alarm_monitor:
+  module: alarm_monitor
+  class: AlarmMonitor
+  door_entity_id:
+    - *var_door_sensors
+  window_entity_id:
+    - *var_window_sensors
+  motion_entity_id:
+    - *var_motion_sensors
+  alarm_entity_id: alarm_control_panel.qolsys_alarm
+  alarm_motion_bypass_entity_id: input_boolean.is_alarm_motion_bypass
+
+
+alarm_notifier:
+  module: alarm_notifier
+  class: AlarmNotifier
+  is_vacation_mode_entity_id: input_boolean.is_vacation_mode
+  presence_mode_entity_id: input_select.presence_mode
+  entity_settings:
+    ## KITCHEN
+    binary_sensor.mqtt_kitchen_window:
+      camera_entity_id: camera.udmp_kitchen_medium_insecure
+    binary_sensor.group_kitchen_french_door:
+      camera_entity_id: camera.udmp_family_room_medium_insecure
+    binary_sensor.zb_kitchen_motion:
+      camera_entity_id: camera.udmp_kitchen_medium_insecure
+    binary_sensor.group_kitchen_motion:
+      camera_entity_id: camera.udmp_kitchen_medium_insecure
+
+    ## FAMILY ROOM
+    binary_sensor.mqtt_family_room_window:
+      camera_entity_id: camera.udmp_family_room_medium_insecure
+
+    # LIVING ROOM
+    binary_sensor.mqtt_living_room_window:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    binary_sensor.zb_living_room_motion:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    binary_sensor.group_living_room_motion:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+
+    # OFFICE
+    binary_sensor.mqtt_office_window:
+      camera_entity_id: camera.udmp_office_medium_insecure
+    binary_sensor.zb_office_motion:
+      camera_entity_id: camera.udmp_office_medium_insecure
+    binary_sensor.group_office_motion:
+      camera_entity_id: camera.udmp_office_medium_insecure
+
+    ## FRONT DOOR
+    binary_sensor.group_front_door:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    lock.zwave_front_door:
+      camera_entity_id: camera.udmp_living_room_medium_insecure
+    binary_sensor.udmp_front_doorbell_doorbell:
+      camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+    binary_sensor.zb_front_door_motion:
+      camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+    binary_sensor.group_outside_front_door_motion:
+      camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+
+    ## LAUNDRY ROOM
+    binary_sensor.group_garage_entry_door:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    binary_sensor.mqtt_laundry_room_window:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    binary_sensor.zb_laundry_room_motion:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    binary_sensor.group_laundry_room_motion:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+    lock.zwave_entry_door:
+      camera_entity_id: camera.udmp_laundry_room_medium_insecure
+
+    # MASTER BEDROOM
+    binary_sensor.group_master_bedroom_motion:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+    binary_sensor.zb_master_bedroom_motion:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+    binary_sensor.mqtt_master_bedroom_window:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+    binary_sensor.mqtt_master_bathroom_window:
+      camera_entity_id: camera.udmp_master_bedroom_medium_insecure
+
+    ## LYNN'S ROOM
+    binary_sensor.group_lynn_s_room_motion:
+      camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+    binary_sensor.zb_lynn_s_room_motion:
+      camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+    binary_sensor.mqtt_lynns_room_window:
+      camera_entity_id: camera.udmp_lynn_s_room_medium_insecure
+
+    ## BASEMENT KITCHEN
+    binary_sensor.mqtt_basement_entry_door:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+    binary_sensor.zb_basement_living_room_motion:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+    binary_sensor.mqtt_basement_kitchen_motion:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+    binary_sensor.group_basement_kitchen_motion:
+      camera_entity_id: camera.udmp_basement_living_room_medium_insecure
+
+    ## WORKOUT ROOM
+    binary_sensor.mqtt_workout_room_window:
+      camera_entity_id: camera.udmp_workout_room_medium_insecure
+    binary_sensor.zb_workout_room_motion:
+      camera_entity_id: camera.udmp_workout_room_medium_insecure
+    binary_sensor.group_workout_room_motion:
+      camera_entity_id: camera.udmp_workout_room_medium_insecure
+
+    ## FRONT YARD
+    binary_sensor.sh_front_yard_motion:
+      camera_entity_id: camera.udmp_front_yard_medium_insecure
+    binary_sensor.group_outside_front_yard_motion:
+      camera_entity_id: camera.udmp_front_yard_medium_insecure
+
+    ## BACKYARD
+    binary_sensor.zwave_backyard_motion:
+      camera_entity_id: camera.udmp_backyard_medium_insecure
+    input_boolean.is_person_detected_backyard:
+      camera_entity_id: camera.udmp_backyard_medium_insecure
+
+    ## SIDE ALLEY
+    binary_sensor.zb_side_alley_motion:
+      camera_entity_id: camera.udmp_shed_medium_insecure
+    binary_sensor.zb_shed_door:
+      camera_entity_id: camera.udmp_shed_medium_insecure
+
+    ## GARAGE DOOR
+    cover.hkc_front_garage_door:
+      camera_entity_id: camera.udmp_front_yard_medium_insecure
+    cover.hkc_back_garage_door:
+      camera_entity_id: camera.udmp_rear_driveway_medium_insecure
+
+
+alarm_state_announcer:
+  module: automation
+  class: Automation
+  variables:
+    pending_arm_message: "Alarm is about to arm."
+    pending_trigger_message: "Alarm is about to trigger."
+    armed_home_message: "Alarm armed for stay."
+    armed_away_message: "Alarm armed for away."
+    disarmed_message: "Alarm disarmed."
+    triggered_message: "Alarm triggered."
+  triggers:
+    - platform: state
+      entity_id: alarm_control_panel.qolsys_alarm
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "disarmed"
+          to: "pending"
+      actions:
+        - platform: announcement
+          tts_message: "{{ pending_arm_message }}"
+          notify_message: "⚠️ {{ pending_arm_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "disarmed"
+          to: "armed_home"
+      actions:
+        - platform: announcement
+          tts_message: "{{ armed_home_message }}"
+          notify_message: "✅ {{ armed_home_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "pending"
+          to: "armed_away"
+      actions:
+        - platform: announcement
+          tts_message: "{{ armed_away_message }}"
+          notify_message: "✅ {{ armed_away_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          to: "disarmed"
+      actions:
+        - platform: announcement
+          tts_message: "{{ disarmed_message }}"
+          notify_message: "✅ {{ disarmed_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_disarmed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          from: "armed_away"
+          to: "pending"
+      actions:
+        - platform: announcement
+          tts_message: "{{ pending_trigger_message }}"
+          notify_message: "‼️ {{ pending_trigger_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          to: "triggered"
+        - platform: state
+          entity_id: input_boolean.is_vacation_mode
+          state: 'on'
+      actions:
+        - platform: announcement
+          tts_message: "Alarm is triggered.<break time=\".2s\" />You are being recorded.<break time=\".2s\" />Police have been contacted."
+          prelude_name: alarm_siren
+          notify_message: "‼️ {{ triggered_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+            critical: true
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: alarm_control_panel.qolsys_alarm
+          to: "triggered"
+      actions:
+        - platform: announcement
+          tts_message: "{{ triggered_message }}"
+          notify_message: "‼️ {{ triggered_message }}"
+          notifier: ios
+          ios:
+            notification_template_name: alarm_armed
+            critical: true
+
+
+alarm_auto_arm:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: input_select.presence_mode
+      duration: 300
+  constraints:
+    - platform: state
+      entity_id: alarm_control_panel.qolsys_alarm
+      state: disarmed
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.presence_mode
+          to: No One is Home
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_away
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.sleeping_time
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_home
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+
+
+alarm_motion_bypass:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_vacuums
+        - alarm_control_panel.qolsys_alarm
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state: armed_away
+        - platform: state
+          entity_id: *var_vacuums
+          state: cleaning
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_alarm_motion_bypass
+    - actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_alarm_motion_bypass
+
+
+alarm_maintenance:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - *var_door_sensors
+        - *var_outside_door_sensors
+        - *var_window_sensors
+        - *var_motion_sensors
+      to: "on"
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_alarm_maintenance
+      state: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: notify
+          message: "⚠️⚠️⚠️ {{ friendly_name(trigger_info.data.entity_id) }} is on"
+          recipient: joe
+          notifier: ios
+          ios:
+            url: /lovelace/view_alarm
+
+
+#outside:
+#  module: automation
+#  class: Automation
+#  triggers:
+#    - platform: state
+#      entity_ids:
+#        - *var_outside_motion_sensors
+#      to: "on"
+#  constraints:
+#    - platform: state
+#      entity_id: alarm_control_panel.qolsys_alarm
+#      state:
+#        - armed_away
+#        - armed_home
+#  handlers:
+#    - constraints:
+#      actions:
+#        - platform: service
+#          service: input_number/increment
+#          data:
+#            entity_id: input_number.outside_motion_count_front_door
+
+
+auto_garage_entry_door_lock:
+  log_level: WARNING
+  module: auto_lock
+  class: AutoLock
+  lock_entity_id: lock.zwave_entry_door
+  control_entity_id: binary_sensor.group_garage_entry_door
+
+
+auto_front_door_lock:
+  log_level: WARNING
+  module: auto_lock
+  class: AutoLock
+  lock_entity_id: lock.zwave_front_door
+  control_entity_id: binary_sensor.group_front_door
+
+
+entry_door_auto_unlock:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.joe_status
+        - input_select.yuyu_status
+      to: Just Arrived
+    - platform: state
+      entity_id: *var_garage_doors
+      to: open
+  constraints:
+    - platform: state
+      entity_id: lock.zwave_entry_door
+      state: locked
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "open"
+        - platform: state
+          entity_id: input_select.joe_status
+          state: "Just Arrived"
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+    - constraints:
+        - platform: triggered_state
+          to: "open"
+        - platform: state
+          entity_id: input_select.yuyu_status
+          state: "Just Arrived"
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+    - constraints:
+        - platform: triggered_state
+          to: "Just Arrived"
+        - platform: state
+          entity_id: cover.hkc_front_garage_door
+          state: open
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+    - constraints:
+        - platform: triggered_state
+          to: "Just Arrived"
+        - platform: state
+          entity_id: cover.hkc_back_garage_door
+          state: open
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "Entry door auto unlocked"
+
+
+#lock_jammed_announcement:
+#  module: automation
+#  class: Automation
+#  variables:
+#    message: "{{ friendly_name(trigger_info.data.entity_id) | replace(' Jammed', '') | capitalize }} is jammed."
+#  triggers:
+#    - platform: state
+#      immediate: true
+#      entity_id:
+#        - binary_sensor.zwave_front_door_lock_jammed
+#        - binary_sensor.zwave_entry_door_lock_jammed
+#  handlers:
+#    - constraints:
+#        - platform: triggered_state
+#          to: "on"
+#      actions:
+#        - platform: announcement
+#          tts_message: "{{ message }}"
+#          notify_message: "⚠️ {{ message }}"
+#          notifier: ios
+
+
+power_outage_detector:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.synology_ups_input_voltage
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_out_of_power
+          state: "off"
+        - platform: state
+          entity_id: sensor.synology_ups_input_voltage
+          state: "<=80"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            input_boolean.is_out_of_power:
+              force_off: false
+        - platform: notify
+          message: "⚡️ Looks like there's a power outage ..."
+          recipient: all
+          notifier: ios
+          ios:
+            critical: true
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_out_of_power
+          state: "on"
+        - platform: state
+          entity_id: sensor.synology_ups_input_voltage
+          state: ">80"
+      actions:
+        - platform: turn_off
+          entity_ids:
+            input_boolean.is_out_of_power:
+              force_off: false
+        - platform: notify
+          message: "⚡️ Power is restored!"
+          recipient: all
+          notifier: ios
+
+
+qolsys_panel:
+  module: gateway
+  class: QolsysGateway
+  panel_host: !secret qolsys_panel_host
+  panel_token: !secret qolsys_panel_token
