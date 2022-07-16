@@ -1,3 +1,4 @@
+from appdaemon.utils import run_async_sync_func
 from typing import List
 
 from alarm_notifier import AlarmNotifier
@@ -23,13 +24,6 @@ class AlarmMonitor(AsyncBaseAutomation):
 
         for entity_id in self._door_entity_ids + self._window_entity_ids + self._motion_entity_ids:
             self.listen_state(self._state_change_handler, entity_id)
-        notifier: AlarmNotifier = await self.get_app('alarm_notifier')
-        notifier.notify([NotifierType.IOS], None, '‼️ ', entity_id, None, {
-            NotifierType.IOS.value: {
-                'notification_template_name': 'alarm_armed_away_motion_triggered',
-            }
-        })
-
 
     async def _state_change_handler(self, entity_id, attribute, old, new, kwargs):
         if new != STATE_ON:
@@ -43,7 +37,10 @@ class AlarmMonitor(AsyncBaseAutomation):
             return
 
         notify_message = await self.figure_notify_message(entity_id)
+        # TODO: replace this with async app API call
+        await run_async_sync_func(self, self.notify, notify_message, entity_id)
 
+    def notify(self, notify_message, entity_id):
         notifier: AlarmNotifier = self.get_app('alarm_notifier')
         notifier.notify([NotifierType.IOS], None, '‼️ ' + notify_message, entity_id, None, {
             NotifierType.IOS.value: {
