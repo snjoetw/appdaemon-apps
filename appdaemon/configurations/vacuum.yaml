@@ -1,0 +1,49 @@
+downstair_vacuum_dustbin_monitor:
+  log_level: DEBUG
+  module: vacuum_dustbin_monitor
+  class: VacuumDustbinMonitor
+  runtime_entity_id: input_number.vacuum_cleaned_area_count
+  monitor_state_entity_id: input_select.vacuum_dustbin_monitor_state
+  vacuum_entity_id: vacuum.xiaomi_downstairs_vacuum
+  vacuum_last_cleaned_area_entity_id: sensor.xiaomi_downstairs_vacuum_last_clean_area
+  vacuum_current_cleaned_area_entity_id: sensor.xiaomi_downstairs_vacuum_current_clean_area
+  vacuum_clean_start_entity_id: sensor.xiaomi_downstairs_vacuum_last_clean_start
+  vacuum_clean_end_entity_id: sensor.xiaomi_downstairs_vacuum_last_clean_end
+  vacuum_current_clean_duration: sensor.xiaomi_downstairs_vacuum_current_clean_duration
+  vacuum_last_clean_duration: sensor.xiaomi_downstairs_vacuum_last_clean_duration
+  cleaned_count_threshold: 200
+  dumping_spot_x_coord: 27000
+  dumping_spot_y_coord: 38000
+
+
+upstair_vacuum_dustbin_monitor:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  variables:
+    message: "Upstairs vacuum dustbin is full."
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.upstairs_vacuum_bin_full
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_message: "⚠️ {{ message }}"
+          notifier: ios
+          ios:
+            thread_id: Vacuum
+            url: /lovelace/view_home
+
+
+downstairs_vacuum_cleaner:
+  module: vacuum_cleaner
+  class: VacuumCleaner
+  webhook_id: 784b8a515573f1d083c0b83676da4ce632942058318bcfad1e6faa066b4c5002
+  vacuum_entity_id: vacuum.xiaomi_downstairs_vacuum
+  areas:
+    kitchen: 19
+    family room: 18
+    hallway: 17

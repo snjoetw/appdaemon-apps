@@ -1,0 +1,534 @@
+###############################################################################
+# C L I M A T E
+###############################################################################
+climate_comfort_mode:
+  module: climate_comfort_mode_monitor
+  class: ClimateComfortModeMonitor
+  temperature_entity_id: sensor.template_upstairs_average_temperature
+  climate_comfort_level_entity_id: input_select.climate_comfort_mode
+  target_temp_high: input_number.main_floor_target_temp_high
+  target_temp_low: input_number.main_floor_target_temp_low
+
+
+last_climate_hvac_action:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.template_climate_main_floor_hvac_action
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: heating
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.last_climate_hvac_action
+          option: heating
+    - constraints:
+        - platform: triggered_state
+          to: cooling
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.last_climate_hvac_action
+          option: cooling
+
+
+climate_auto_fan_min_on_time:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.climate_comfort_mode
+        - climate.main_floor
+        - input_select.air_quality_level
+    - platform: state
+      entity_id:
+        - climate.main_floor
+      attribute: preset_mode
+  handlers:
+    - constraints:
+        - platform: attribute
+          entity_id: climate.main_floor
+          attribute: preset_mode
+          value: "Away"
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 0
+    - constraints:
+        - platform: state
+          entity_id: input_select.air_quality_level
+          state: [POOR, VERY_POOR]
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 60
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: Hot
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 30
+    - constraints:
+        - platform: state
+          entity_id: input_select.air_quality_level
+          state: [FAIR]
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 15
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: Warm
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 10
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: Comfort
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 0
+    - constraints:
+        - platform: state
+          entity_id: input_select.climate_comfort_mode
+          state: [Cool, Cold]
+      actions:
+        - platform: set_fan_min_on_time
+          entity_id: climate.main_floor
+          fan_min_on_time: 0
+
+
+auto_fan_vent:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: sensor.template_climate_main_floor_fan
+      to: "on"
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_vent_enabled
+      state: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_cover_position
+          entity_id:
+            - cover.zb_kitchen_vent
+            - cover.zb_lynn_s_room_vent
+            - cover.zb_office_vent
+            - cover.zb_master_bedroom_vent_1
+            - cover.zb_master_bedroom_vent_2
+          position: 100
+
+
+auto_thermostat_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - input_select.presence_mode
+    - platform: time
+      minutes: 15
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_select.presence_mode
+          state: No One is Home
+      actions:
+        - platform: service
+          service: climate/set_preset_mode
+          data:
+            entity_id: climate.main_floor
+            preset_mode: away
+    - constraints:
+        - platform: state
+          entity_id: input_select.presence_mode
+          state: No One is Home
+          negate: true
+        - platform: attribute
+          entity_id: climate.main_floor
+          attribute: preset_mode
+          value: "Away"
+      actions:
+        - platform: service
+          service: ecobee/resume_program
+          data:
+            entity_id: climate.main_floor
+            resume_all: true
+
+
+#auto_cooling_fan:
+#  module: cooling_fan_runner
+#  class: CoolingFanRunner
+#  climate_entity_id: climate.main_floor
+#  presence_mode_entity_id: input_select.presence_mode
+#  monitors:
+#    - temperature_entity_id: sensor.office_temperature
+#      fan_entity_id: fan.dyson_office
+#      fan_on_temperature_offset: -0.1
+#      fan_off_temperature_offset: -0.3
+#      ignore_presence_mode: true
+#      enabler_entity_id: input_boolean.is_auto_fan_enabled_office
+#    - temperature_entity_id: sensor.template_lynn_s_room_temperature
+#      fan_entity_id: fan.dyson_lynns_room
+#      fan_on_temperature_offset: 0
+#      fan_off_temperature_offset: -0.3
+#      enabler_entity_id: input_boolean.is_auto_fan_enabled_lynns_room
+#    - temperature_entity_id: sensor.template_master_bedroom_temperature
+#      fan_entity_id: fan.dyson_master_bedroom
+#      fan_on_temperature_offset: 0
+#      fan_off_temperature_offset: -0.3
+#      enabler_entity_id: input_boolean.is_auto_fan_enabled_master_bedroom
+
+
+
+auto_climate_vent_monitor:
+  module: auto_climate_vent_monitor
+  class: AutoClimateVentMonitor
+  enabler_entity_id: input_boolean.is_auto_vent_enabled
+  climate_entity_id: climate.main_floor
+  target_temp_high: input_number.main_floor_target_temp_high
+  target_temp_low: input_number.main_floor_target_temp_low
+  last_hvac_action_entity_id: input_select.last_climate_hvac_action
+  hvac_action_entity_id: sensor.template_climate_main_floor_hvac_action
+  zones:
+    - temperature_entity_id: sensor.template_master_bedroom_temperature
+      vent_entity_ids:
+        - cover.zb_master_bedroom_vent_1
+        - cover.zb_master_bedroom_vent_2
+      cooling_temp_offset_high: 0.1
+      cooling_temp_offset_low: -0.5
+      heating_temp_offset_high: 0
+      heating_temp_offset_low: -0.8
+      fully_open_entity_id: input_boolean.is_climate_master_bedroom_only_mode
+
+    - temperature_entity_id: sensor.template_kitchen_temperature
+      vent_entity_ids:
+        - cover.zb_kitchen_vent
+      cooling_temp_offset_high: 0.2
+      cooling_temp_offset_low: -0.5
+      heating_temp_offset_high: 0
+      heating_temp_offset_low: -0.8
+
+    - temperature_entity_id: sensor.template_lynn_s_room_temperature
+      vent_entity_ids:
+        - cover.zb_lynn_s_room_vent
+      cooling_temp_offset_high: 0
+      cooling_temp_offset_low:  -0.5
+      heating_temp_offset_high: 0.5
+      heating_temp_offset_low: 0
+      min_open_percent: 0.2
+
+    - temperature_entity_id: sensor.template_office_temperature
+      vent_entity_ids:
+        - cover.zb_office_vent
+      cooling_temp_offset_high: -0.5
+      cooling_temp_offset_low:  -1
+      heating_temp_offset_high: 0
+      heating_temp_offset_low: -0.8
+
+#    - temperature_entity_id: sensor.anne_s_room_temperature
+#      vent_entity_ids:
+#        - cover.zb_anne_s_room_vent
+#      cooling_temp_offset_high: 1
+#      cooling_temp_offset_low:  0.5
+#      heating_temp_offset_high: 0
+#      heating_temp_offset_low: -0.8
+
+
+air_quality_monitor:
+  module: air_quality_monitor
+  class: AirQualityMonitor
+  overall_air_quality_level_entity_id: input_select.air_quality_level
+  rooms:
+    - air_quality_level_entity_id: input_select.air_quality_level_kitchen
+      name: Kitchen
+      sensors:
+        - sensor_entity_id: sensor.airthings_kitchen_co2
+          name: CO2
+          thresholds:
+            - level: VERY_POOR
+              value: 1000
+            - level: FAIR
+              value: 900
+        - sensor_entity_id: sensor.airthings_kitchen_radon
+          name: Radon
+          thresholds:
+            - level: VERY_POOR
+              value: 150
+            - level: FAIR
+              value: 100
+        - sensor_entity_id: sensor.airthings_kitchen_voc
+          name: VOC
+          thresholds:
+            - level: VERY_POOR
+              value: 2000
+            - level: FAIR
+              value: 250
+    - air_quality_level_entity_id: input_select.air_quality_level_master_bedroom
+      name: Master Bedroom
+      sensors:
+        - sensor_entity_id: sensor.airthings_master_bedroom_voc
+          name: VOC
+          thresholds:
+            - level: VERY_POOR
+              value: 2000
+            - level: FAIR
+              value: 250
+        - sensor_entity_id: sensor.dyson_master_bedroom_pm_10
+          name: PM 10
+          thresholds:
+            - level: VERY_POOR
+              value: 100
+            - level: POOR
+              value: 75
+            - level: FAIR
+              value: 50
+        - sensor_entity_id: sensor.dyson_master_bedroom_pm_2_5
+          name: PM 2.5
+          thresholds:
+            - level: VERY_POOR
+              value: 70
+            - level: POOR
+              value: 54
+            - level: FAIR
+              value: 36
+        - sensor_entity_id: sensor.dyson_master_bedroom_nitrogen_dioxide
+          name: NO2
+          thresholds:
+            - level: VERY_POOR
+              value: 9
+            - level: POOR
+              value: 7
+            - level: FAIR
+              value: 4
+    - air_quality_level_entity_id: input_select.air_quality_level_lynn_s_room
+      name: Lynn's Room
+      sensors:
+        - sensor_entity_id: sensor.airthings_lynns_room_voc
+          name: VOC
+          thresholds:
+            - level: VERY_POOR
+              value: 2000
+            - level: FAIR
+              value: 250
+        - sensor_entity_id: sensor.dyson_lynns_room_pm_10
+          name: PM 10
+          thresholds:
+            - level: VERY_POOR
+              value: 100
+            - level: POOR
+              value: 75
+            - level: FAIR
+              value: 50
+        - sensor_entity_id: sensor.dyson_lynns_room_pm_2_5
+          name: PM 2.5
+          thresholds:
+            - level: VERY_POOR
+              value: 70
+            - level: POOR
+              value: 54
+            - level: FAIR
+              value: 36
+        - sensor_entity_id: sensor.dyson_lynns_room_nitrogen_dioxide
+          name: NO2
+          thresholds:
+            - level: VERY_POOR
+              value: 9
+            - level: POOR
+              value: 7
+            - level: FAIR
+              value: 4
+
+
+fan_auto_night_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - fan.dyson_lynns_room
+        - fan.dyson_master_bedroom
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "on"
+      actions:
+        - platform: turn_on
+          entity_ids:
+            - switch.dyson_lynns_room_night_mode
+            - switch.dyson_master_bedroom_night_mode
+
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "off"
+      actions:
+        - platform: turn_off
+          entity_ids:
+            - switch.dyson_lynns_room_night_mode
+            - switch.dyson_master_bedroom_night_mode
+
+
+var_fan_auto_mode_actions: &var_fan_auto_mode_actions
+  - platform: service
+    service: fan/turn_on
+    data:
+      entity_id: fan.dyson_master_bedroom
+      preset_mode: Auto
+  - platform: service
+    service: fan/turn_on
+    data:
+      entity_id: fan.dyson_lynns_room
+      preset_mode: Auto
+    constraints:
+      - platform: state
+        entity_id: input_select.last_climate_hvac_action
+        state: cooling
+
+
+fan_auto_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.sleeping_time
+        - input_select.climate_comfort_mode
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.sleeping_time
+          to: "on"
+      actions: *var_fan_auto_mode_actions
+
+    - constraints:
+        - platform: triggered_state
+          entity_id: input_select.climate_comfort_mode
+          to: Comfort
+        - platform: time
+          start_time: "03:00:00"
+          end_time: "08:00:00"
+      actions: *var_fan_auto_mode_actions
+
+
+climate_preset_mode_overrider:
+  module: climate_preset_mode_overrider
+  class: ClimatePresetModeOverrider
+  climate_entity_id: climate.main_floor
+  override_enabler_entity_id: input_boolean.is_climate_master_bedroom_only_mode
+  overrides:
+    Sleep: Sleep M
+    Midnight: Midnight M
+    E Morning: E Morning M
+    Morning: Morning M
+
+
+auto_climate_master_bedroom_only_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id:
+        - input_select.occupancy_master_bedroom
+        - input_select.occupancy_lynn_s_room
+        - binary_sensor.sleeping_time
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "on"
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "off"
+        - platform: state
+          entity_id: input_select.occupancy_master_bedroom
+          state: OCCUPIED
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+          negate: true
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "on"
+        - platform: state
+          entity_id: input_select.occupancy_master_bedroom
+          state: OCCUPIED
+        - platform: state
+          entity_id: input_select.occupancy_lynn_s_room
+          state: OCCUPIED
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: "off"
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "on"
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+
+auto_climate_master_bedroom_only_mode_notification:
+  module: automation
+  class: Automation
+  variables:
+    enabled_message: "Master bedroom only mode enabled."
+    disabled_message: "Master bedroom only mode disabled."
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id: input_boolean.is_climate_master_bedroom_only_mode
+  constraints:
+    - platform: triggered_state
+      from: ["on", "off"]
+      to: ["on", "off"]
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "on"
+      actions:
+        - platform: notify
+          message: "🛏️ {{ enabled_message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            thread_id: Climate
+            interruption_level: time-sensitive
+    - constraints:
+        - platform: state
+          entity_id: input_boolean.is_climate_master_bedroom_only_mode
+          state: "off"
+      actions:
+        - platform: notify
+          message: "🛏️ {{ disabled_message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            thread_id: Climate
+            interruption_level: time-sensitive

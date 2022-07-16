@@ -1,0 +1,202 @@
+###############################################################################
+# S T A I R W A Y
+###############################################################################
+stairway_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  enabler_entity_id: input_boolean.is_motion_enabled_stairway
+  scene_entity_id: input_select.lighting_mode_stairway
+  motion_entity_id: binary_sensor.zb_stairway_motion
+  turn_off_delay: 30
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.zwave_stairway_light
+          brightness: 80
+#    - scene_name: Sleeping
+#      lights:
+#        - entity_id: light.zwave_stairway_light
+#          brightness: 20
+
+###############################################################################
+# W A S H R O O M
+###############################################################################
+washroom_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id: binary_sensor.zb_washroom_motion
+  turn_off_delay: 600
+  scenes:
+    - scene_name: Default
+      lights:
+        - switch.sh_washroom_light
+
+
+###############################################################################
+# H A L L W A Y
+###############################################################################
+hallway_lighting:
+  log_level: WARNING
+  module: motion_lighting
+  class: MotionLighting
+  motion_entity_id:
+    - binary_sensor.group_hallway_motion
+    - binary_sensor.group_laundry_room_motion
+  enabler_entity_id: input_boolean.is_motion_enabled_hallway
+  scene_entity_id: input_select.lighting_mode_hallway
+  turn_off_delay: 20
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.hue_hallway_light
+          brightness: 255
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.hue_hallway_light
+          brightness: 150
+
+hallway_pathway_light:
+  log_level: WARNING
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: group.downstairs_lights_without_hallway_light
+      from: "on"
+      to: "off"
+  handlers:
+    - constraints:
+      actions:
+        - platform: trigger_pathway_light
+          app_name: hallway_lighting
+
+
+###############################################################################
+# L I V I N G  R O O M
+###############################################################################
+#living_room_lighting:
+#  module: image_processing_motion_lighting
+#  class: ImageProcessingMotionLighting
+#  enabler_entity_id: input_boolean.is_motion_enabled_living_room
+#  scene_entity_id: input_select.lighting_mode_living_room
+#  motion_entity_id:
+#    - binary_sensor.group_living_room_motion
+#  turn_off_delay: 300
+#  image_processing_settings:
+#    enabler_entity_id: input_boolean.is_image_processing_enabled_living_room
+#    person_detected_entity_id: binary_sensor.template_living_room_person
+#  scenes:
+#    - scene_name: Dark
+#      lights:
+#        - switch.sh_living_room_light
+
+
+xmas_lighting:
+  module: automation
+  class: Automation
+  variables:
+    turn_on_time: "sunset + 00:30:00"
+    turn_off_time: "23:00:00"
+  triggers:
+    - platform: time
+      time: "{{ turn_on_time }}"
+    - platform: time
+      time: "{{ turn_off_time }}"
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_light_enabled_dining_room
+      state: "on"
+  handlers:
+    - actions:
+        - platform: turn_off
+          entity_ids: switch.tp_outdoor_plug_1
+          constraints:
+            - platform: triggered_time
+              time: '{{turn_off_time}}'
+        - platform: turn_on
+          entity_ids: switch.tp_outdoor_plug_1
+          constraints:
+            - platform: triggered_time
+              time: '{{turn_on_time}}'
+
+living_room_shade_auto_open:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunrise
+      offset: 600
+  constraints:
+    - platform: state
+      entity_id: input_boolean.is_auto_shade_enabled_living_room
+      state: 'on'
+    - platform: state
+      entity_id: input_select.presence_mode
+      state: No One is Home
+      negate: true
+  handlers:
+    - constraints:
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.zb_living_room_shade
+          position: 25
+
+living_room_shade_auto_close:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: sunset
+      offset: -1800
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: binary_sensor.mqtt_living_room_window
+          state: "off"
+      actions:
+        - platform: set_cover_position
+          entity_id: cover.zb_living_room_shade
+          position: 0
+
+
+###############################################################################
+# D I N I N G  R O O M
+###############################################################################
+dining_room_lighting:
+  module: timer_motion_lighting
+  class: TimerMotionLighting
+  enabler_entity_id: input_boolean.is_auto_light_enabled_dining_room
+  timer:
+    turn_on_start_time: 'sunset'
+    turn_on_end_time: '23:00:00'
+  scenes:
+    - scene_name: Default
+      lights:
+        - entity_id: light.hue_dining_room_lamp
+          brightness: 255
+          rgb_color: [255, 203, 114]
+          force_on: false
+          force_off: false
+
+dining_room_meeting_dnd:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.zoom_joe
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: override_announcer_player_volume
+          entity_id: media_player.gh_dining_room
+          volume: 0
+    - constraints:
+        - platform: triggered_state
+          to: "off"
+      actions:
+        - platform: override_announcer_player_volume
+          entity_id: media_player.gh_dining_room

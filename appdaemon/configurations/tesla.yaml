@@ -1,0 +1,164 @@
+###############################################################################
+# T E S L A
+###############################################################################
+
+tesla_model_x_location_updater:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id:
+        - sensor.mqtt_tesla_model_x_longitude
+        - sensor.mqtt_tesla_model_x_latitude
+        - sensor.mqtt_tesla_model_x_battery_level
+  handlers:
+    - constraints:
+      actions:
+        - platform: service
+          service: device_tracker/see
+          data:
+            dev_id: tesla_model_x
+            gps: '[{{ state("sensor.mqtt_tesla_model_x_latitude") }}, {{ state("sensor.mqtt_tesla_model_x_longitude") }}]'
+            battery: '{{ state("sensor.mqtt_tesla_model_x_battery_level") }}'
+
+
+tesla_model_y_location_updater:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      immediate: true
+      entity_id:
+        - sensor.mqtt_tesla_model_y_longitude
+        - sensor.mqtt_tesla_model_y_latitude
+        - sensor.mqtt_tesla_model_y_battery_level
+  handlers:
+    - constraints:
+      actions:
+        - platform: service
+          service: device_tracker/see
+          data:
+            dev_id: tesla_model_y
+            gps: '[{{ state("sensor.mqtt_tesla_model_y_latitude") }}, {{ state("sensor.mqtt_tesla_model_y_longitude") }}]'
+            battery: '{{ state("sensor.mqtt_tesla_model_y_battery_level") }}'
+
+
+tesla_model_x_charge_limit:
+  module: automation
+  class: Automation
+  variables:
+    message: "Tesla Model X is charging with charging limit less than 90%."
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.mqtt_tesla_model_x_state
+  constraints:
+    - platform: triggered_state
+      to: charging
+    - platform: state
+      entity_id: binary_sensor.mqtt_tesla_model_x_plugged_in
+      state: "on"
+    - platform: state
+      entity_id: sensor.template_presence_tesla_model_x
+      state: "home"
+      negate: true
+    - platform: state
+      entity_id: sensor.mqtt_tesla_model_x_charge_limit
+      state: '<90'
+  handlers:
+    - actions:
+        - platform: notify
+          message: "⚠️ {{ message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            notification_template_name: tesla_monitor
+
+
+tesla_model_y_charge_limit:
+  module: automation
+  class: Automation
+  variables:
+    message: "Tesla Model Y is charging with charging limit less than 90%."
+  triggers:
+    - platform: state
+      entity_id:
+        - sensor.mqtt_tesla_model_y_state
+  constraints:
+    - platform: triggered_state
+      to: charging
+    - platform: state
+      entity_id: binary_sensor.mqtt_tesla_model_y_plugged_in
+      state: "on"
+    - platform: state
+      entity_id: sensor.template_presence_tesla_model_y
+      state: "home"
+      negate: true
+    - platform: state
+      entity_id: sensor.mqtt_tesla_model_y_charge_limit
+      state: '<90'
+  handlers:
+    - actions:
+        - platform: notify
+          message: "⚠️ {{ message }}"
+          recipient: all
+          notifier: ios
+          ios:
+            notification_template_name: tesla_monitor
+
+
+tesla_firmware_update:
+  module: automation
+  class: Automation
+  variables:
+    message: "New software update is available for {{ friendly_name(trigger_info.data.entity_id) | replace(' Update Available', '') }}"
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.mqtt_tesla_model_x_update_available
+        - binary_sensor.mqtt_tesla_model_y_update_available
+      to: "on"
+  constraints:
+  handlers:
+    - actions:
+        - platform: announcement
+          tts_message: "{{ message }}"
+          notify_message: "🚗️ {{ message }}"
+          notifier: ios
+          ios:
+            notification_template_name: tesla_monitor
+
+
+tesla_auto_lock_at_home:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: binary_sensor.sleeping_time
+      to: "on"
+  handlers:
+    - constraints:
+      actions:
+        - platform: lock
+          entity_id: lock.template_tesla_model_x_door
+          notifier: ios
+          notify_message: "🚗🔒 Auto locked Tesla Model X for sleeping time"
+          constraints:
+            - platform: state
+              entity_id: device_tracker.tesla_model_x
+              state: home
+            - platform: state
+              entity_id: lock.template_tesla_model_x_door
+              state: unlocked
+        - platform: lock
+          entity_id: lock.template_tesla_model_y_door
+          notifier: ios
+          notify_message: "🚗🔒 Auto locked Tesla Model Y for sleeping time"
+          constraints:
+            - platform: state
+              entity_id: device_tracker.tesla_model_y
+              state: home
+            - platform: state
+              entity_id: lock.template_tesla_model_y_door
+              state: unlocked

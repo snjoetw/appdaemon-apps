@@ -1,0 +1,767 @@
+###############################################################################
+# C O M M O N
+###############################################################################
+
+notifier:
+  module: notifier
+  class: Notifier
+  ios:
+    recipients:
+      joe: mobile_app_joes_iphone
+      yuyu: mobile_app_yuyus_iphone
+    notification_templates:
+      tesla_monitor:
+        thread_id: Tesla Monitor
+        url: /lovelace/view_garage
+      alarm_armed:
+        thread_id: Alarm Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_TRIGGER
+            title: Trigger Alarm
+      alarm_armed_away_motion_triggered:
+        thread_id: Alarm Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_ARM_AWAY
+            title: Ignore
+          - action: ALARM_TRIGGER
+            title: Trigger Alarm
+      alarm_disarmed:
+        thread_id: Alarm Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: ALARM_ARM_HOME
+            title: Arm Home
+          - action: ALARM_ARM_AWAY
+            title: Arm Away
+      front_doorbell:
+        thread_id: Front Doorbell
+        url: /lovelace/view_alarm
+        interruption_level: time-sensitive
+        sound_name: Sherwood_Forest.caf
+        actions:
+          - action: FRONT_DOORBELL_EMERGENCY
+            title: Emergency
+            destructive: true
+            icon: "sfsymbols:bell"
+          - action: FRONT_DOORBELL_SAY_YOU_CAN_LEAVE_IT
+            title: Say "You can leave it by the door. Thank you!"
+          - action: FRONT_DOORBELL_SAY_WE_WILL_BE_RIGHT_THERE
+            title: Say "We'll be right there."
+          - action: FRONT_DOORBELL_SAY_NO_ONE_CAN_COME_TO_THE_DOOR
+            title: Say "No one can come to the door."
+          - action: FRONT_DOORBELL_SAY_THANK_YOU
+            title: Say "Thank you!"
+      garage_opened_closed:
+        thread_id: Garage Monitor
+        url: /lovelace/view_alarm
+        actions:
+          - action: CLOSE_FRONT_GARAGE_DOOR
+            title: Close Front Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_front_garage_door
+                state: open
+          - action: CLOSE_BACK_GARAGE_DOOR
+            title: Close Back Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_back_garage_door
+                state: open
+          - action: OPEN_FRONT_GARAGE_DOOR
+            title: Open Front Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_front_garage_door
+                state: closed
+          - action: OPEN_BACK_GARAGE_DOOR
+            title: Open Back Garage
+            constraints:
+              - platform: state
+                entity_id: cover.hkc_back_garage_door
+                state: closed
+  facebook_messenger:
+    recipients: !secret facebook_recipients_by_name
+    access_token: !secret facebook_meesenger_page_access_token
+
+announcer:
+  module: announcer
+  class: Announcer
+  tts_platform: amazon_polly
+  tts_base_filepath: /config/tts/
+  library_base_filepath: /config/www/library/
+  library_base_url_path: /local/library/
+  sound_path:
+    chime: 'sound/chime.mp3'
+    empty: 'sound/empty.mp3'
+    alarm_siren: 'sound/alarm_siren.mp3'
+    door_beep: 'sound/door_beep.mp3'
+    window_beep: 'sound/window_beep.mp3'
+    garage_beep: 'sound/garage_beep.mp3'
+    doorbell: 'sound/doorbell.mp3'
+    dog_barking: 'sound/dog_barking.mp3'
+
+  sleeping_time_entity_id: binary_sensor.sleeping_time
+  api_base_url: !secret homeassistant_internal_url
+  api_token: !secret appdaemon_hass_api_token
+  enabler_entity_id: input_boolean.is_announcer_enabled
+  default_speak_speed: 90%
+  default_volume:
+    sleeping: 0.40
+    regular: 0.6
+    critical: 0.75
+  players:
+    - type: google
+      player_entity_id: media_player.gh_shower_room
+      motion_entity_id: binary_sensor.zb_shower_room_motion
+      keep_alive: true
+      volume:
+        sleeping: 0
+        regular: 0.4
+        critical: 0.6
+      enabled:
+        - platform: state
+          entity_id: light.zb_shower_room_light
+          state: "on"
+    - type: google
+      player_entity_id: media_player.gh_laundry_room
+      motion_entity_id: binary_sensor.group_laundry_room_motion
+      keep_alive: true
+      volume:
+        sleeping: 0.25
+        regular: 0.6
+        critical: 0.75
+    - type: google
+      player_entity_id: media_player.gh_family_room
+      motion_entity_id:
+        - binary_sensor.group_family_room_motion
+        - binary_sensor.group_kitchen_motion
+      keep_alive: true
+    - type: sonos
+      player_entity_id: media_player.dining_room
+      motion_entity_id: binary_sensor.group_living_room_motion
+      volume:
+        sleeping: 0.25
+        regular: 0.45
+        critical: 0.7
+    - type: sonos
+      player_entity_id: media_player.office
+      motion_entity_id: binary_sensor.group_office_motion
+      volume:
+        sleeping: 0.25
+        regular: 0.45
+        critical: 0.7
+    - type: sonos
+      player_entity_id: media_player.basement_living_room
+      motion_entity_id: binary_sensor.group_workout_room_motion
+      volume:
+        sleeping: 0.25
+        regular: 0.45
+        critical: 0.7
+    - type: sonos
+      player_entity_id: media_player.master_bathroom
+      motion_entity_id: binary_sensor.zb_master_bathroom_motion
+      volume:
+        sleeping: 0.35
+        regular: 0.45
+        critical: 0.45
+      enabled:
+        - platform: state
+          entity_id: input_boolean.is_showering_master_bedroom
+          state: "on"
+    - type: default
+      player_entity_id: media_player.udmp_front_doorbell_speaker
+      targeted_only: true
+      volume:
+        sleeping: 0.9
+        regular: 0.9
+        critical: 0.9
+    - type: default
+      player_entity_id: media_player.udmp_backyard_speaker
+      targeted_only: true
+      volume:
+        sleeping: 0.9
+        regular: 0.9
+        critical: 0.9
+
+
+motion_announcer:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id:
+        - binary_sensor.group_family_room_motion
+        - binary_sensor.group_kitchen_motion
+        - binary_sensor.group_office_motion
+        - binary_sensor.group_living_room_motion
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          to: "on"
+      actions:
+        - platform: motion_announcer
+          message_entity_id: input_text.motion_announcement_message
+          message_from_entity_id: input_select.motion_announcement_from
+        - platform: set_value
+          entity_id: input_text.motion_announcement_message
+          value: ""
+
+
+is_vacation_mode:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: time
+      minutes: 60
+  handlers:
+    - constraints:
+        - platform: time
+          start_time_entity_id: input_datetime.vacation_start_date
+          end_time_entity_id: input_datetime.vacation_end_date
+      actions:
+        - platform: turn_on
+          entity_ids:
+            input_boolean.is_vacation_mode:
+              force_on: false
+    - constraints:
+      actions:
+        - platform: turn_off
+          entity_ids:
+            input_boolean.is_vacation_mode:
+              force_off: false
+
+
+
+vacation_mode_notifier:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      entity_id: input_boolean.is_vacation_mode
+  handlers:
+    - constraints:
+        - platform: triggered_state
+          from: "off"
+          to: "on"
+      actions:
+        - platform: notify
+          message: "Hello! We're going away and will be back on {{ format_date(state('input_datetime.vacation_end_date')) }}. Please look after our house for us :)"
+          recipient: all
+          notifier: facebook_messenger
+    - constraints:
+        - platform: triggered_state
+          from: "on"
+          to: "off"
+      actions:
+        - platform: notify
+          message: "Hello! We're back, thanks for taking care of our house!"
+          recipient: all
+          notifier: facebook_messenger
+
+
+# https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder
+# Lougheed Town Centre Station: ChIJO_DzbDt4hlQRLTw8oxdhBck
+# Braid Station: ChIJT9NHFQV4hlQReDxG330uMO8
+# Saperton Station: ChIJSYSNfP93hlQRwkTQf2d81D4
+# Columbia Station: ChIJCUsMnHLYhVQRSLPLTPRCdS4
+# Stadium-Chinatown Station: ChIJDRJikHtxhlQRC36gLHt3sJ8
+commute_time_monitor:
+  module: commute_time_monitor
+  class: CommuteTimeMonitor
+  google_travel_time_api_key: !secret google_travel_time_api_key
+  presence_status_entity_id: input_select.joe_status
+  notify_entity_id:
+    - mobile_app_joes_iphone
+  start_time: '08:00:00'
+  end_time: '10:00:00'
+  routes:
+    - name: Driving
+      origin: !secret map_location_home
+      destinations:
+        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+          travel_mode: driving
+
+    - name: Lougheed Mall Station
+      origin: !secret map_location_home
+      destinations:
+        - destination: place_id:ChIJT9NHFQV4hlQReDxG330uMO8
+          travel_mode: driving
+        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+          travel_mode: transit
+        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+          travel_mode: walking
+
+    - name: Braid Station
+      origin: !secret map_location_home
+      destinations:
+        - destination: place_id:ChIJO_DzbDt4hlQRLTw8oxdhBck
+          travel_mode: driving
+        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+          travel_mode: transit
+        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+          travel_mode: walking
+#
+#    - name: Saperton
+#      origin: !secret map_location_home
+#      destinations:
+#        - destination: place_id:ChIJSYSNfP93hlQRwkTQf2d81D4
+#          travel_mode: driving
+#        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+#          travel_mode: transit
+#        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+#          travel_mode: walking
+#
+#    - name: Columbia
+#      origin: !secret map_location_home
+#      destinations:
+#        - destination: place_id:ChIJCUsMnHLYhVQRSLPLTPRCdS4
+#          travel_mode: driving
+#        - destination: place_id:ChIJDRJikHtxhlQRC36gLHt3sJ8
+#          travel_mode: transit
+#        - destination: place_id:ChIJX54l69ZzhlQRXX8Ln5xCxdQ
+#          travel_mode: walking
+
+
+briefer:
+  module: briefer
+  class: Briefer
+  motion_entity_id:
+    - binary_sensor.group_office_motion
+    - binary_sensor.group_family_room_motion
+    - binary_sensor.group_kitchen_motion
+  on_demand_entity_id: input_boolean.is_on_demand_briefing_enabled
+  briefing_state_entity_id: input_select.briefing_state
+  briefing_state_period:
+    - state: EARLY_MORNING
+      start_time: '4:15:00'
+      end_time: '8:00:00'
+    - state: MORNING
+      start_time: '8:30:00'
+      end_time: '9:00:00'
+    - state: NOON
+      start_time: '12:00:00'
+      end_time: '15:00:00'
+    - state: EVENING
+      start_time: '17:00:00'
+      end_time: '20:00:00'
+  providers:
+    - provider: greet
+    - provider: weather_forecast
+
+    - provider: calendar
+      api_base_url: !secret homeassistant_internal_url
+      api_token: !secret appdaemon_hass_api_token
+      calendar_entity_id: calendar.google_home
+      waste_collection_calendar_entity_id: calendar.google_my_waste
+
+    - provider: stock
+      api_key: !secret finhub_api_key
+      workday_entity_id: binary_sensor.workday_sensor
+      stock_symbols:
+        - AAPL
+        - TSLA
+        - SQ
+
+    - provider: low_battery_device
+
+
+reminder:
+  module: reminder
+  class: Reminder
+  presence_mode_entity_id: input_select.presence_mode
+  motion_entity_id:
+    - binary_sensor.group_family_room_motion
+    - binary_sensor.group_kitchen_motion
+    - binary_sensor.group_office_motion
+    - binary_sensor.group_living_room_motion
+  providers:
+    - provider: device_battery
+      trigger_method: motion
+      interval: 180
+
+    - provider: vent_issue
+      trigger_method: motion
+      interval: 180
+
+    - provider: travel_time
+      interval: 5
+      calendar_api_base_url: !secret homeassistant_internal_url
+      calendar_api_token: !secret appdaemon_hass_api_token
+      calendar_entity_id: calendar.google_home
+      map_api_key: !secret google_travel_time_api_key
+      map_home_location: !secret map_location_home
+      buffer_time: 15
+      notify:
+        notifier: ios
+        ios:
+          thread_id: Travel Time
+
+    - provider: school_time
+      interval: 5
+      start_time: '08:25:00'
+      end_time: '08:55:00'
+      school_time: '08:50:00'
+      school_day_entity_id: input_boolean.is_school_day
+
+    - provider: drink_water
+      enabled: false
+      interval: 90
+      trigger_method: motion
+      start_time: '09:00:00'
+      end_time: '17:00:00'
+
+    - provider: bad_air_quality
+      interval: 60
+      trigger_method: motion
+      bad_air_quality_mode_entity_id: input_boolean.is_bad_air_quality_mode
+
+    - provider: exceeds_threshold
+      interval: 30
+      trigger_method: motion
+      thresholds:
+        - threshold: 1000
+          message: 'CO2 level is high in {}'
+        - threshold: 2000
+          message: 'CO2 level is really high in {}'
+      notify_settings:
+        message: '{{reminder_text}}'
+        recipient: all
+        notifier: ios
+        ios:
+          thread_id: Air Quality Monitor
+      settings:
+        - entity_id: sensor.airthings_kitchen_co2
+          name: Kitchen
+
+    - provider: climate_away_mode
+      interval: 60
+      trigger_method: motion
+      climate_entity_id: climate.main_floor
+
+    - provider: abnormal_room_temperature
+      interval: 60
+      threshold: 0.1
+      rooms:
+        - name: Kitchen
+          temperature_entity_id: sensor.template_kitchen_temperature
+        - name: Lynn's Room
+          temperature_entity_id: sensor.template_lynn_s_room_temperature
+        - name: Master Bedroom
+          temperature_entity_id: sensor.template_master_bedroom_temperature
+        - name: Office
+          temperature_entity_id: sensor.template_office_temperature
+        - name: Ann's Room
+          temperature_entity_id: sensor.anne_s_room_temperature
+
+    - provider: left_on
+      interval: 10
+      message: '{} is still open.'
+      message_plural: '{} are still open.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          thread_id: Security Monitor
+          url: /lovelace/view_alarm
+      thresholds:
+        - threshold: 3600
+          entity_id:
+            - *var_downstairs_window_sensors
+            - *var_basement_window_sensors
+        - threshold: 1800
+          entity_id:
+            - *var_door_sensors
+            - *var_outside_door_sensors
+
+    - provider: left_on
+      interval: 10
+      message: '{} is still open.'
+      message_plural: '{} are still open.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          thread_id: Security Monitor
+          url: /lovelace/view_alarm
+          notification_template_name: garage_opened_closed
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - *var_garage_doors
+
+    - provider: left_on
+      interval: 10
+      message: '{} has been left unlocked for too long.'
+      message_plural: '{} have been left unlocked for too long.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          thread_id: Security Monitor
+          url: /lovelace/view_alarm
+          notification_template_name: garage_opened_closed
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - *var_door_locks
+
+    - provider: left_on
+      interval: 10
+      message: "{} has been left open for too long."
+      message_plural: '{} have been left open for too long.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          notification_template_name: tesla_monitor
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - binary_sensor.mqtt_tesla_model_x_trunk
+            - binary_sensor.mqtt_tesla_model_x_frunk
+            - binary_sensor.mqtt_tesla_model_x_doors
+            - binary_sensor.mqtt_tesla_model_x_windows
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_x_user_present
+              state: "off"
+        - threshold: 600
+          entity_id:
+            - binary_sensor.mqtt_tesla_model_y_trunk
+            - binary_sensor.mqtt_tesla_model_y_frunk
+            - binary_sensor.mqtt_tesla_model_y_doors
+            - binary_sensor.mqtt_tesla_model_y_windows
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_y_user_present
+              state: "off"
+
+
+    - provider: left_on
+      interval: 10
+      message: '{} has been left unlocked for too long.'
+      message_plural: '{} have been left unlocked for too long.'
+      notify:
+        message: "⚠️ {{ message }}"
+        notifier: ios
+        ios:
+          notification_template_name: tesla_monitor
+      thresholds:
+        - threshold: 600
+          entity_id:
+            - lock.mqtt_tesla_model_x_door
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_x_user_present
+              state: "off"
+            - platform: state
+              entity_id: sensor.template_presence_tesla_model_x
+              negate: true
+              state: home
+        - threshold: 600
+          entity_id:
+            - lock.mqtt_tesla_model_y_door
+          constraints:
+            - platform: state
+              entity_id: binary_sensor.mqtt_tesla_model_y_user_present
+              state: "off"
+            - platform: state
+              entity_id: sensor.template_presence_tesla_model_y
+              negate: true
+              state: home
+
+
+mobile_app_notification_handler:
+  module: mobile_app_notification_handler
+  class: MobileAppNotificationHandler
+  notification_entity_id:
+    - sensor.fire_hd_2017_last_notification
+    - sensor.vizio_tablet_last_notification
+
+
+school_day_monitor:
+  module: school_day_monitor
+  class: SchoolDayMonitor
+  calendar_api_base_url: !secret homeassistant_internal_url
+  calendar_api_token: !secret appdaemon_hass_api_token
+  calendar_entity_id: calendar.google_elementary_school
+  workday_entity_id: binary_sensor.workday_sensor
+  school_day_entity_id: input_boolean.is_school_day
+
+
+food_delivery_notifier:
+  module: automation
+  class: Automation
+  variables:
+    order_delivered_message: "{{ trigger_info.data.data.service_name }} order is delivered at front door."
+    order_almost_delivered_message: "{{ trigger_info.data.data.service_name }} delivery person is almost at front door."
+    order_on_the_move_message: "{{ trigger_info.data.data.service_name }} order is on the move."
+    preparing_order_message: "Restaurant is preparing your {{ trigger_info.data.data.service_name }} order."
+    order_ready_for_pickup_message: "{{ trigger_info.data.data.service_name }} order is ready, time to pick it up."
+  triggers:
+    - platform: event
+      event_type: ad.food_delivery_event
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_delivered
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_delivered_message }}"
+          notify_message: "🍴 {{ order_delivered_message }}"
+          notifier: ios
+          notify_camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_almost_delivered
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_almost_delivered_message }}"
+          notify_message: "🚗 {{ order_almost_delivered_message }}"
+          notifier: ios
+          notify_camera_entity_id: camera.udmp_front_doorbell_medium_insecure
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_on_the_move
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_on_the_move_message }}"
+          notify_message: "🚗 {{ order_on_the_move_message }}"
+          notifier: ios
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: preparing_order
+      actions:
+        - platform: announcement
+          tts_message: "{{ preparing_order_message }}"
+          notify_message: "🥡 {{ preparing_order_message }}"
+          notifier: ios
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            event_type: order_ready_for_pickup
+      actions:
+        - platform: announcement
+          tts_message: "{{ order_ready_for_pickup_message }}"
+          notify_message: "🚙 {{ order_ready_for_pickup_message }}"
+          notifier: ios
+
+
+timer_monitor:
+  module: timer_monitor
+  class: TimerMonitor
+  timer_entity_id:
+    - sensor.family_room_speaker_timers
+    - sensor.kitchen_display_timers
+    - sensor.laundry_room_speaker_timers
+    - sensor.lynns_room_speaker_timers
+
+
+medicine_intake_tracker_joe:
+  module: medicine_intake_tracker
+  class: MedicineIntakeTracker
+  state_entity_id: input_select.medicine_intake_state_joe
+  count_entity_id: input_number.medicine_intake_count_joe
+  max_pill_count: 4
+  pill_box_entity_id: binary_sensor.m2_pill_box
+
+
+sequence_going_downstairs_detector:
+  log_level: DEBUG
+  module: sequence_monitor
+  class: SequenceMonitor
+  min_match: 4
+  sequence_entity_id: input_boolean.sequence_going_downstairs_detected
+  sequence:
+    - entity_id:
+        - binary_sensor.m2_master_bedroom_door
+        - binary_sensor.m2_lynn_s_room_door
+    - entity_id: binary_sensor.group_upstairs_hallway_motion
+    - entity_id: binary_sensor.zb_stairway_motion
+    - entity_id: binary_sensor.zb_hallway_motion_2
+    - entity_id: binary_sensor.zb_hallway_motion
+    - entity_id:
+        - binary_sensor.group_kitchen_motion
+        - binary_sensor.group_office_motion
+        - binary_sensor.group_living_room_motion
+        - binary_sensor.group_family_room_motion
+        - binary_sensor.zb_washroom_motion
+
+
+sequence_going_upstairs_detector:
+  log_level: DEBUG
+  module: sequence_monitor
+  class: SequenceMonitor
+  min_match: 3
+  sequence_entity_id: input_boolean.sequence_going_upstairs_detected
+  sequence:
+    - entity_id: binary_sensor.group_hallway_motion
+    - entity_id: binary_sensor.zb_stairway_motion
+    - entity_id: binary_sensor.group_upstairs_hallway_motion
+    - entity_id:
+        - binary_sensor.m2_master_bedroom_door
+        - binary_sensor.m2_lynn_s_room_door
+        - binary_sensor.zb_shower_room_motion
+
+
+fire_hd_10_last_notification:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: state
+      attribute: all
+      entity_id:
+        - sensor.fire_hd_2017_last_notification
+        - sensor.fire_hd_10_2019_last_notification
+  handlers:
+    - constraints:
+      actions:
+        - platform: debug
+
+
+occupancy_monitor:
+  module: occupancy_monitor
+  class: OccupancyMonitor
+  rooms:
+    - name: Lynn's Room
+      occupancy_entity_id: input_select.occupancy_lynn_s_room
+      entry_entity_id: binary_sensor.m2_lynn_s_room_door
+      movement_entity_id:
+        - binary_sensor.zb_lynn_s_room_motion
+        - binary_sensor.zb_lynn_s_room_under_bed_motion
+      media_player_entity_id: media_player.lynns_room
+
+    - name: Master Bedroom Room
+      occupancy_entity_id: input_select.occupancy_master_bedroom
+      entry_entity_id: binary_sensor.m2_master_bedroom_door
+      movement_entity_id:
+        - binary_sensor.group_master_bedroom_motion
+      media_player_entity_id: media_player.master_bedroom
+
+
+zha_event_debugger:
+  log_level: DEBUG
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: zha_event
+  constraints:
+  handlers:
+    - constraints:
+      actions:
+        - platform: debug

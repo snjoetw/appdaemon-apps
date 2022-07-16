@@ -1,0 +1,165 @@
+###############################################################################
+# I O S   A C T I O N
+###############################################################################
+
+home_status_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+  handlers:
+    - constraints:
+        - platform: triggered_action
+          action_name: home_status
+      actions:
+        - platform: notify
+          recipient: joe
+          notifier: ios
+          message: |
+            🐘: {{ state('sensor.template_lynn_s_room_temperature') }}°C
+            🛏️: {{ state('sensor.template_master_bedroom_temperature') }}°C
+            🔪: {{ state('sensor.template_kitchen_temperature') }}°C
+            Last motion in {{ state('input_text.last_home_movement') | lower | replace(' motion', '') | replace(' 2', '') }} {{ relative_time(state_attr('input_text.last_home_movement', 'last_updated')) }}
+          ios:
+            critical: true
+            volume: 0.0
+
+
+shower_time_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+  handlers:
+    - constraints:
+        - platform: triggered_action
+          action_name: shower_time
+      actions:
+        - platform: turn_on
+          entity_ids: input_boolean.is_scene_shower_time
+
+
+unlock_entry_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_entry_door
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: lock.zwave_entry_door
+          state: locked
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_entry_door
+          notifier: ios
+          notify_message: "🔓 Entry door unlocked by tag"
+
+unlock_front_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_front_door
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: lock.zwave_front_door
+          state: locked
+      actions:
+        - platform: unlock
+          entity_id: lock.zwave_front_door
+          notifier: ios
+          notify_message: "🔓 Front door unlocked by tag"
+
+disarm_alarm_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: disarm_alarm
+  handlers:
+    - constraints:
+        - platform: state
+          entity_id: alarm_control_panel.qolsys_alarm
+          state: disarmed
+          negate: true
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_disarm
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+            code: !secret alarm_control_panel_code
+
+turn_off_master_bedroom_led:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: disable_kasa_led
+  handlers:
+    - constraints:
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_kasa_led_enabled_master_bedroom
+        - platform: delay
+          # 12 hrs
+          delay: 43200
+          actions:
+            - platform: turn_on
+              entity_ids: input_boolean.is_kasa_led_enabled_master_bedroom
+
+toggle_climate_master_bedroom_only_mode_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: toggle_climate_master_bedroom_only_mode
+  handlers:
+    - constraints:
+      actions:
+        - platform: toggle
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+
+record_timestamp_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: record_timestamp
+  handlers:
+    - constraints:
+      actions:
+        - platform: debug
+
+
+unlock_tesla_model_x_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_tesla_model_x_door
+  handlers:
+    - constraints:
+      actions:
+        - platform: unlock
+          entity_id: lock.template_tesla_model_x_door
+          notifier: ios
+          notify_message: "🔓 Tesla Model X door unlocked"
+
+
+unlock_tesla_model_y_door_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: action
+      action_name: unlock_tesla_model_y_door
+  handlers:
+    - constraints:
+      actions:
+        - platform: unlock
+          entity_id: lock.template_tesla_model_y_door
+          notifier: ios
+          notify_message: "🔓 Tesla Model Y door unlocked"
