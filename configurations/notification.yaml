@@ -1,0 +1,233 @@
+###############################################################################
+# N O T I F I C A T I O N   A U T O M A T I O N
+###############################################################################
+music_notification_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_PIANO_CHILL
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.45
+          source: 'Piano Chill'
+          shuffle: true
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_CHILL_MIX
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.3
+          source: 'Chill Mix'
+          shuffle: true
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_K_POP_CHILL
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.3
+          source: 'K-Pop Chill'
+          shuffle: true
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SONOS_K_POP_ESSENTIALS
+      actions:
+        - platform: turn_on_media_player
+          entity_id: media_player.master_bathroom
+          volume: 0.3
+          source: 'K-Pop Essentials'
+          shuffle: true
+
+
+alarm_notification_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_DISARM
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_disarm
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+            code: !secret alarm_control_panel_code
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_ARM_AWAY
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_away
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_ARM_HOME
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_arm_home
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: ALARM_TRIGGER
+      actions:
+        - platform: service
+          service: alarm_control_panel/alarm_trigger
+          data:
+            entity_id: alarm_control_panel.qolsys_alarm
+            code: !secret alarm_control_panel_code
+
+
+garage_notification_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: CLOSE_FRONT_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/close_cover
+          data:
+            entity_id: cover.hkc_front_garage_door
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: OPEN_FRONT_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/open_cover
+          data:
+            entity_id: cover.hkc_front_garage_door
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: CLOSE_BACK_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/close_cover
+          data:
+            entity_id: cover.hkc_back_garage_door
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: OPEN_BACK_GARAGE_DOOR
+      actions:
+        - platform: service
+          service: cover/open_cover
+          data:
+            entity_id: cover.hkc_back_garage_door
+
+
+front_doorbell_action_handler:
+  module: automation
+  class: Automation
+  triggers:
+    - platform: event
+      event_type: mobile_app_notification_action
+  handlers:
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_YOU_CAN_LEAVE_IT
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">Hi there, you can leave the package by the door. Thank you!</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_WE_WILL_BE_RIGHT_THERE
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">We will be right there.</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_NO_ONE_CAN_COME_TO_THE_DOOR
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">No one can come to the door.</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_SAY_THANK_YOU
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">Thank you! Have a nice day!</prosody>'
+          prelude_name: doorbell
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: FRONT_DOORBELL_EMERGENCY
+      actions:
+        - platform: announcement
+          tts_message: '<prosody rate="90%">You are being recorded.<break time=".2s" />Police have been contacted.</prosody>'
+          prelude_name: alarm_siren
+          player_entity_id: media_player.udmp_front_doorbell_speaker
+          volume_mode: regular
+        - platform: trigger_pathway_light
+          app_name: front_door_lighting
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: TURN_OFF_MASTER_BEDROOM_ONLY_MODE
+      actions:
+        - platform: turn_off
+          entity_ids: input_boolean.is_climate_master_bedroom_only_mode
+
+    - constraints:
+        - platform: triggered_event
+          event_data:
+            action: SET_UNOCCUPIED_LYNN_S_ROOM
+      actions:
+        - platform: select_input_select_option
+          entity_id: input_select.occupancy_lynn_s_room
+          option: UNOCCUPIED

@@ -1,0 +1,3 @@
+app_definition_monitor:
+  module: app_configuration_monitor
+  class: AppConfigurationMonitor

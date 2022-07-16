@@ -1,0 +1,196 @@
+light_runtime_monitor:
+  module: light_runtime_monitor
+  class: LightRuntimeMonitor
+  check_frequency: 600
+  thresholds:
+    - entity_id: light.hue_kitchen_pantry_light
+      threshold_in_minute: 15
+    - entity_id: light.hue_basement_stairway_light
+      threshold_in_minute: 15
+    - entity_id: light.hue_lynn_s_room_lightstrip
+      threshold_in_minute: 60
+    - entity_id: light.hue_lynn_s_room_ceiling_light
+      threshold_in_minute: 60
+    - entity_id: light.hue_kids_bathroom_light
+      threshold_in_minute: 15
+    - entity_id: light.yeelight_kids_bathroom_lightstrip
+      threshold_in_minute: 15
+    - entity_id: switch.tp_master_bedroom_walkin_closet_light
+      threshold_in_minute: 60
+    - entity_id: light.zwave_stairway_light
+      threshold_in_minute: 5
+    - entity_id: input_boolean.is_showering_shower_room
+      threshold_in_minute: 60
+
+
+darkness_monitor:
+  module: darkness_monitor
+  class: DarknessMonitor
+  zones:
+    - darkness_entity_id: input_select.darkness_level_downstairs_front
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_front_door_motion_illuminance
+          skip_when_on_entity_ids:
+            - light.zwave_front_door_light
+          darkness_threshold: 3000
+
+    - darkness_entity_id: input_select.darkness_level_downstairs_back
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_side_alley_illuminance
+          darkness_threshold: 3000
+
+    - darkness_entity_id: input_select.darkness_level_downstairs_kitchen
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_kitchen_motion_illuminance
+          darkness_threshold: 75
+          skip_when_on_entity_ids:
+            - switch.sh_kitchen_light
+            - switch.sh_kitchen_counter_light
+        - light_sensor_entity_id: sensor.zwave_backyard_luminance
+          darkness_threshold: 3000
+
+    - darkness_entity_id: input_select.darkness_level_upstairs_master_bathroom
+      participate_sun_down_time: true
+      areas:
+        - light_sensor_entity_id: sensor.zb_master_bathroom_motion_illuminance
+          darkness_threshold: 150
+          skip_when_on_entity_ids:
+            - light.tp_master_bathroom_light
+            - switch.tp_master_bathroom_ceiling_light
+        - light_sensor_entity_id: sensor.zwave_backyard_luminance
+          darkness_threshold: 700
+
+
+lighting_mode_monitor:
+  module: lighting_mode_monitor
+  class: LightingModeMonitor
+  check_frequency: 15
+  sleeping_time_entity_id: binary_sensor.sleeping_time
+  midnight_time_entity_id: binary_sensor.midnight_time
+  lighting_modes:
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_backyard
+      participate_sleeping_time: false
+      participate_sunset_time: false
+      thresholds:
+        8: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_front_yard
+      participate_sleeping_time: false
+      participate_sunset_time: false
+      thresholds:
+        10: Not Dark
+        0: Dark
+    # Family Room
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_family_room
+      participate_sleeping_time: false
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_hallway
+      participate_sleeping_time: true
+      thresholds:
+        900: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_kitchen
+      participate_sleeping_time: true
+      thresholds:
+        750: Not Dark
+        0: Dark
+    # Living Room
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_living_room
+      participate_sleeping_time: false
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_stairway
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_upstairs
+      participate_midnight_time: true
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_master_bathroom
+      participate_midnight_time: true
+      thresholds:
+        750: Not Dark
+        0: Dark
+    - light_sensor_entity_id: sensor.zwave_backyard_luminance
+      mode_entity_id: input_select.lighting_mode_master_bedroom
+      thresholds:
+        750: Not Dark
+        0: Dark
+
+
+vacant_light_simulator:
+  module: vacant_light_simulator
+  class: VacantLightSimulator
+  presence_mode_entity_id: input_select.presence_mode
+  simulators:
+    - light_entity_id: light.hue_hallway_light
+      light_mode_entity_id: input_select.lighting_mode_hallway
+      light_mode_states: [Dark, Sleeping]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 3600
+      turn_off_min_delay: 60
+      turn_off_max_delay: 120
+    - light_entity_id: light.hue_upstairs_hallway_light
+      light_mode_entity_id: input_select.lighting_mode_upstairs
+      light_mode_states: [Dark]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 3600
+      turn_off_min_delay: 60
+      turn_off_max_delay: 120
+    - light_entity_id: light.zwave_stairway_light
+      light_mode_entity_id: input_select.lighting_mode_stairway
+      light_mode_states: [Dark, Sleeping]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 3600
+      turn_off_min_delay: 60
+      turn_off_max_delay: 120
+    - light_entity_id: switch.sh_kitchen_light
+      light_mode_entity_id: input_select.lighting_mode_kitchen
+      light_mode_states: [Dark, Sleeping]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 3600
+      turn_on_max_delay: 5400
+      turn_off_min_delay: 1800
+      turn_off_max_delay: 2700
+    - light_entity_id: switch.sh_office_light
+      light_mode_entity_id: input_select.lighting_mode_office
+      light_mode_states: [Dark]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 2700
+      turn_off_min_delay: 3600
+      turn_off_max_delay: 7200
+    - light_entity_id: light.hue_family_room_light
+      light_mode_entity_id: input_select.lighting_mode_family_room
+      light_mode_states: [Dark]
+      start_time: sunset - 00:30:00
+      end_time: "00:08:08"
+      turn_on_min_delay: 1800
+      turn_on_max_delay: 2700
+      turn_off_min_delay: 3600
+      turn_off_max_delay: 7200

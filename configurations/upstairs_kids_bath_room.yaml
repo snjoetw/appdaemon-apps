@@ -1,0 +1,111 @@
+kids_bathroom_lighting:
+  module: motion_lighting
+  class: MotionLighting
+  scene_entity_id: input_select.lighting_mode_upstairs
+  motion_entity_id: binary_sensor.zb_kids_bathroom_motion
+  turn_off_delay: 60
+  scenes:
+    - scene_name: Dark
+      lights:
+        - entity_id: light.yeelight_kids_bathroom_lightstrip
+          brightness: 255
+          rgb_color: [255, 203, 114]
+        - entity_id: light.hue_kids_bathroom_light
+          brightness: 255
+    - scene_name: Sleeping
+      lights:
+        - entity_id: light.yeelight_kids_bathroom_lightstrip
+          brightness: 75
+          rgb_color: [255, 203, 114]
+        - entity_id: light.hue_kids_bathroom_light
+          brightness: 50
+    - scene_name: Midnight
+      lights:
+        - entity_id: light.yeelight_kids_bathroom_lightstrip
+          brightness: 25
+          rgb_color: [255, 203, 114]
+
+
+kids_bathroom_auto_blind:
+  module: automation
+  class: Automation
+  variables:
+    door_monitor_start_time: '07:00:00'
+    open_time: '08:30:00'
+    close_time: 'sunrise - 00:30:00'
+  triggers:
+    - platform: time
+      time:
+        - '{{open_time}}'
+        - '{{close_time}}'
+    - platform: state
+      entity_id:
+        - binary_sensor.m2_lynn_s_room_door
+        - binary_sensor.sleeping_time
+        - sun.sun
+  handlers:
+    - constraints:
+        - platform: triggered_time
+          time: '{{open_time}}'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 100
+    - constraints:
+        - platform: triggered_time
+          time: '{{close_time}}'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 60
+    # when door==open
+    # if time_between=8:00&9:30 + blind_is_closed
+    # then open_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          to: "on"
+        - platform: time
+          start_time: '{{door_monitor_start_time}}'
+          end_time: '{{open_time}}'
+        - platform: attribute
+          entity_id: cover.zb_kids_bathroom_blind
+          attribute: current_position
+          value: '<=65'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 100
+    # when door_is_closed or sleeping_time
+    # if door_is_closed + sleeping_time + sun_still_up + blind_is_opened
+    # then close_blind
+    - constraints:
+        - platform: triggered_state
+          entity_id:
+            - binary_sensor.m2_lynn_s_room_door
+            - binary_sensor.sleeping_time
+        - platform: state
+          entity_id: binary_sensor.m2_lynn_s_room_door
+          state: "off"
+        - platform: state
+          entity_id: binary_sensor.sleeping_time
+          state: 'on'
+        - platform: state
+          entity_id: sun.sun
+          state: above_horizon
+        - platform: attribute
+          entity_id: cover.zb_kids_bathroom_blind
+          attribute: current_position
+          value: '>=95'
+      actions:
+        - platform: service
+          service: cover/set_cover_position
+          data:
+            entity_id: cover.zb_kids_bathroom_blind
+            position: 60
