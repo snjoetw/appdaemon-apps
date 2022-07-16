@@ -1,3 +1,0 @@
-appdaemon_status_handler:
-  module: appdaemon_status_handler
-  class: AppdaemonStatusHandler
